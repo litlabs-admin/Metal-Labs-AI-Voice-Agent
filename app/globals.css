@@ -1,26 +1,163 @@
 @import "tailwindcss";
 
+/* =========================================================================
+   Metal Labs design tokens — extracted verbatim from the Vapi.ai reference.
+   See DESIGN_AUDIT.md. No magic numbers live in components; everything traces
+   back to a token here (Tailwind v4 @theme generates the utility classes).
+   ========================================================================= */
+@theme {
+  /* Fonts (wired to next/font in app/fonts.ts) */
+  --font-avantt: var(--font-avantt), "Avantt Fallback", Arial, sans-serif;
+  --font-gridnik: var(--font-gridnik), "FoundryGridnik Fallback", Arial, sans-serif;
+
+  /* Colors */
+  --color-cream: #fffaea; /* warm page background */
+  --color-cream-2: #f2f0ed; /* light section background */
+  --color-surface-cream: #efebdd; /* cream card surface */
+  --color-ink: #0e0e13; /* near-black page background */
+  --color-ink-2: #1a1a1a; /* dark card surface */
+  --color-ink-3: #2a2a2a; /* darker card surface */
+  --color-black: #000000;
+  --color-text: #09090b; /* primary text on light */
+  --color-text-on-dark: #fffaea;
+  --color-muted: #71717a;
+  --color-muted-2: #a1a1aa;
+  --color-mint: #62f6b5; /* primary green accent */
+  --color-mint-hover: #82f8c4;
+  --color-lime: #bbf529; /* secondary accent */
+  --color-hairline: #d9d3c2; /* border on cream */
+  --color-divider: rgba(120, 144, 140, 0.5); /* stats dividers */
+
+  /* Nav */
+  --color-nav-cta: #e8e6e3;
+
+  /* Typography scale (px values from the reference) */
+  --text-display-2xl: 80px;
+  --text-display-2xl--line-height: 0.9;
+  --text-display-2xl--letter-spacing: -4px;
+  --text-display-xl: 64px;
+  --text-display-xl--line-height: 0.95;
+  --text-display-xl--letter-spacing: -3.2px;
+  --text-display-lg: 58px;
+  --text-display-lg--line-height: 0.95;
+  --text-display-lg--letter-spacing: -2.9px;
+  --text-headline-md: 56px;
+  --text-headline-md--line-height: 1;
+  --text-headline-md--letter-spacing: -2.4px;
+  --text-display-sm: 32px;
+  --text-display-sm--line-height: 1.05;
+  --text-display-sm--letter-spacing: -1px;
+  --text-eyebrow: 10px;
+  --text-eyebrow--line-height: 1;
+  --text-eyebrow--letter-spacing: 1px;
+  --text-body-15: 15px;
+  --text-body-15--line-height: 1.4;
+
+  /* Radii */
+  --radius-chip: 6px;
+  --radius-btn: 8px;
+  --radius-card: 12px;
+  --radius-media: 24px;
+
+  /* Container */
+  --container-site: 1296px;
+
+  /* Motion durations & easings (reference tokens) */
+  --ease-out-ml: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out-ml: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-slide: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-bounce: cubic-bezier(0.5, 0, 0.4, 1.2);
+}
+
+/* Per-section nav theming hooks */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --nav-fg: #000;
+}
+[data-nav-theme="dark"] {
+  --nav-fg: #fff;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-cream);
+  color: var(--color-text);
+  font-family: var(--font-avantt);
+}
+
+/* =========================================================================
+   Keyframes ported from the reference (DESIGN_AUDIT.md §6)
+   ========================================================================= */
+@keyframes ml-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes ml-pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
+@keyframes ml-bubble-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes ml-typing {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes ml-phone-pulse {
+  from {
+    transform: scale(0.9);
+    opacity: 0.6;
+  }
+  to {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+/* Infinite logo marquee */
+@keyframes ml-marquee {
+  to {
+    transform: translateX(calc(-50% - 0.5rem));
+  }
+}
+
+.animate-ml-spin {
+  animation: ml-spin 1s linear infinite;
+}
+.animate-ml-marquee {
+  animation: ml-marquee var(--marquee-duration, 40s) linear infinite;
+}
+.marquee-mask {
+  -webkit-mask-image: linear-gradient(90deg, #0000, #000 4%, #000 96%, #0000 100%);
+  mask-image: linear-gradient(90deg, #0000, #000 4%, #000 96%, #0000 100%);
+}
+
+/* Respect reduced motion for all decorative animation */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

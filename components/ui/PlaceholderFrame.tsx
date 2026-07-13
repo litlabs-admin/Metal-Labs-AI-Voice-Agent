@@ -24,7 +24,7 @@ export function PlaceholderFrame({
         className,
       )}
     >
-      <span className="font-[family-name:var(--font-gridnik)] text-[11px] uppercase leading-relaxed tracking-wide">
+      <span className="font-illustration text-[11px] uppercase leading-relaxed tracking-wide">
         {strip}
       </span>
     </div>

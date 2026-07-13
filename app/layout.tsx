@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { avantt, gridnik } from "./fonts";
+import { merriweather, cabin, inter, switzer } from "./fonts";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -14,7 +14,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${avantt.variable} ${gridnik.variable} antialiased`}>
+    <html
+      lang="en"
+      className={`${merriweather.variable} ${cabin.variable} ${inter.variable} ${switzer.variable} antialiased`}
+    >
       <body className="min-h-screen overflow-x-hidden bg-cream text-text">{children}</body>
     </html>
   );

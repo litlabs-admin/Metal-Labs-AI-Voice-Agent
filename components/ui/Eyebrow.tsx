@@ -1,6 +1,6 @@
 import { cn } from "@/lib/cn";
 
-// Gridnik, 10px, uppercase, tracked — the reference eyebrow/label style.
+// Inter (illustration face), 10px, uppercase, tracked — eyebrow/label style.
 export function Eyebrow({
   children,
   className,
@@ -11,7 +11,7 @@ export function Eyebrow({
   return (
     <span
       className={cn(
-        "font-[family-name:var(--font-gridnik)] text-eyebrow font-medium uppercase text-muted",
+        "font-illustration text-eyebrow font-medium uppercase text-muted",
         className,
       )}
     >

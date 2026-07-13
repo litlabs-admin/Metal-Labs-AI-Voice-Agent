@@ -17,7 +17,7 @@ export function UnifiedPlatform() {
       <div className="mx-auto max-w-[var(--container-site)]">
         <Reveal className="mx-auto flex max-w-[720px] flex-col items-center text-center">
           <Eyebrow>{unified.eyebrow}</Eyebrow>
-          <h2 className="mt-4 text-display-sm font-medium leading-[1.05] tracking-[-1px] text-text md:text-display-lg md:tracking-[-2.9px]">
+          <h2 className="mt-4 text-display-sm font-light leading-[1.2] tracking-[-0.4px] text-text md:text-display-lg md:tracking-[-1px]">
             {unified.headline[0]}
             <br />
             {unified.headline[1]}
@@ -40,7 +40,7 @@ export function UnifiedPlatform() {
               imgClassName="h-7 w-7 object-contain"
               className="h-7 w-7"
             />
-            <h3 className="mt-5 text-[24px] font-medium leading-[1.15] tracking-[-0.6px] text-text md:text-[28px]">
+            <h3 className="mt-5 text-[24px] font-light leading-[1.3] tracking-[-0.2px] text-text md:text-[28px]">
               {unified.subFeature.heading}
             </h3>
             <p className="mt-4 text-[16px] leading-[1.5] text-muted">

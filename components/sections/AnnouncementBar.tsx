@@ -17,7 +17,7 @@ export function AnnouncementBar() {
         <span className="text-white/90">{announcement.text}</span>
         <a
           href="#about"
-          className="group inline-flex items-center gap-1 whitespace-nowrap font-[family-name:var(--font-gridnik)] text-[11px] uppercase tracking-wide text-mint underline-offset-2 hover:underline"
+          className="group inline-flex items-center gap-1 whitespace-nowrap font-illustration text-[11px] uppercase tracking-wide text-mint underline-offset-2 hover:underline"
         >
           {announcement.cta}
           <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />

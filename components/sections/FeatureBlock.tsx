@@ -31,7 +31,7 @@ export function FeatureBlock() {
             imgClassName="h-7 w-7 object-contain"
             className="h-7 w-7"
           />
-          <h2 className="mt-5 text-display-sm font-medium leading-[1.1] tracking-[-1px] text-text md:text-[44px] md:tracking-[-2px]">
+          <h2 className="mt-5 text-display-sm font-light leading-[1.2] tracking-[-0.4px] text-text md:text-[44px] md:tracking-[-0.6px]">
             {feature.headline[0]}
             <br />
             {feature.headline[1]}

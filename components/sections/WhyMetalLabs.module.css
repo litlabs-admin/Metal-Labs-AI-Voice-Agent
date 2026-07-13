@@ -1,0 +1,137 @@
+/* §8 — "Built for Mortgage". Sizing is the reference template's Industry section, verbatim.
+   Kept in a module rather than Tailwind variants because the reference switches at 1440px, and
+   Tailwind v4 sorts a custom/arbitrary 1440 variant *before* `md:` — so `md:` would win on any
+   property they share (grid columns, font sizes, padding, gap). Explicit media queries here make
+   the cascade unambiguous. Mobile-first: base = reference phone, 768 = tablet, 1440 = desktop. */
+
+.section {
+  padding: 80px 20px;
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+}
+
+.titleBlock {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  text-align: center;
+}
+
+.heading {
+  font-size: 26px;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+.grid {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+/* Zero-gap grid: the container draws the top/left rules and each card the bottom/right, so the
+   table closes cleanly at 1, 2, or 3 columns without per-card border patterns. */
+.card {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px;
+  padding: 20px;
+  text-align: center;
+}
+
+.tile {
+  position: relative;
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  overflow: clip;
+  background-size: cover;
+  background-position: center;
+}
+
+.glyph {
+  display: block;
+  width: 38px;
+  height: 38px;
+  background-color: #fff;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+}
+
+.cardTitle {
+  font-size: 20px;
+  line-height: 1.33;
+  font-weight: 400;
+}
+
+.cardBody {
+  font-size: 16px;
+  line-height: 26px;
+}
+
+@media (min-width: 768px) {
+  .section {
+    padding: 100px 30px;
+  }
+  .inner {
+    gap: 60px;
+  }
+  .heading {
+    font-size: 38px;
+  }
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .cardTitle {
+    font-size: 22px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .section {
+    padding: 140px 30px;
+  }
+  .inner {
+    gap: 70px;
+  }
+  .heading {
+    font-size: 44px;
+  }
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .card {
+    gap: 24px;
+    padding: 32px;
+  }
+  .tile {
+    padding: 36px;
+  }
+  .glyph {
+    width: 48px;
+    height: 48px;
+  }
+  .cardTitle {
+    font-size: 24px;
+    line-height: 32px;
+  }
+}

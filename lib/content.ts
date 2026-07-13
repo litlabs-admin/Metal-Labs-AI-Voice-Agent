@@ -26,15 +26,9 @@ export const nav = {
 // §3 — Hero
 export const hero = {
   headline: ["The only AI agent platform", "mortgage lenders will ever need."],
-  subhead:
-    "From the first lead call to the final payment, Metal Labs handles every borrower conversation across voice, text, and email. One platform. No gaps. No excuses.",
   cta: "Book a Demo",
-  widget: {
-    scenario: "Inbound Lead Qualification",
-    button: "Initiate Call",
-    microcopy: "Call our AI agent now",
-    phonePlaceholder: "[PLACEHOLDER NUMBER]",
-  },
+  ctaSecondary: "Hear It Live",
+  ctaSecondaryPending: "Connecting…",
   caption: "Built for US home lenders · Voice · Text · Email · TCPA compliant",
 } as const;
 
@@ -70,7 +64,33 @@ export const feature = {
 // §7 — Channels strip (dark)
 export const channels = {
   eyebrow: "EVERY CHANNEL",
-  headline: ["Voice, text, and email —", "connected by design."],
+  headline: ["Voice, text, and email", "connected by design."],
+} as const;
+
+// §4 — Omnichannel (eyebrow + scroll-revealed headline + 3 hover cards)
+export const omnichannel = {
+  // Not "Every Channel" — §7 ChannelsStrip already uses that label further down the page.
+  eyebrow: "Omnichannel",
+  headline: "One agent. Every channel. Full context, always.",
+  subhead:
+    "Metal Labs agents work across voice, text, and email simultaneously. Every conversation is remembered. Every channel is connected. When a borrower calls after receiving a text, the agent picks up exactly where it left off.",
+  cards: [
+    {
+      kicker: "Voice",
+      title: "Natural borrower calls",
+      body: "Inbound and outbound. Local presence dialing. Warm transfers to LOs with full conversation context.",
+    },
+    {
+      kicker: "Text",
+      title: "SMS follow-ups that convert",
+      body: "Document reminders, payment nudges, appointment confirmations. Delivered when borrowers actually respond.",
+    },
+    {
+      kicker: "Email",
+      title: "Automated outreach that doesn't feel automated",
+      body: "Personalized emails triggered by borrower behavior, not a blast schedule. Every message in context.",
+    },
+  ],
 } as const;
 
 // §8 — Why Metal Labs (6-cell grid)
@@ -161,13 +181,5 @@ export const closing = {
   buttons: ["Book a Demo", "Call Our Agent →"],
 } as const;
 
-// §13 — Footer
-export const footer = {
-  tagline: "Every borrower conversation. Fully handled.",
-  columns: [
-    { title: "PRODUCT", links: ["Solutions", "Product", "Use Cases"] },
-    { title: "COMPANY", links: ["About", "Book a Demo", "Contact"] },
-    { title: "LEGAL", links: ["Privacy Policy", "Terms"] },
-  ],
-  copyright: "© 2026 Metal Labs, Inc. All rights reserved.",
-} as const;
+// §13 — Footer content is inlined in components/sections/Footer.tsx (ported
+// verbatim from the reference footer).

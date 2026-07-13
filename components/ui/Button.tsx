@@ -4,7 +4,7 @@ import type { ComponentPropsWithoutRef } from "react";
 type Variant = "primary" | "light" | "dark" | "ghost";
 
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-btn px-5 py-2.5 text-[15px] font-medium " +
+  "inline-flex items-center justify-center gap-2 rounded-btn px-5 py-2.5 text-[15px] font-button font-normal " +
   "transition-all duration-300 active:scale-95 cursor-pointer whitespace-nowrap";
 
 const variants: Record<Variant, string> = {

@@ -24,7 +24,7 @@ export function ClosingCTA() {
       <div className="absolute inset-0 bg-black/32" />
 
       <Reveal className="relative z-10 mx-auto flex max-w-[var(--container-site)] flex-col items-center justify-center gap-6 px-6 py-20 text-center xl:py-28">
-        <h2 className="max-w-[820px] text-display-sm font-medium leading-[1.05] tracking-[-1px] text-white md:text-display-lg md:tracking-[-2.9px]">
+        <h2 className="max-w-[820px] text-display-sm font-light leading-[1.2] tracking-[-0.4px] text-white md:text-display-lg md:tracking-[-1px]">
           {closing.headline}
         </h2>
         <p className="max-w-[600px] text-[17px] leading-[1.5] text-white/80">
@@ -44,7 +44,7 @@ export function ClosingCTA() {
             />
             <button
               type="button"
-              className="relative z-10 inline-flex items-center justify-center gap-2 rounded-btn bg-[#0b0b0e] px-6 py-3 text-[15px] font-medium text-white transition-transform duration-300 active:scale-95"
+              className="relative z-10 inline-flex items-center justify-center gap-2 rounded-btn bg-[#0b0b0e] px-6 py-3 text-[15px] font-normal text-white transition-transform duration-300 active:scale-95"
             >
               {closing.buttons[1]}
             </button>

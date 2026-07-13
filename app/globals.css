@@ -7,8 +7,10 @@
    ========================================================================= */
 @theme {
   /* Fonts (wired to next/font in app/fonts.ts) */
-  --font-avantt: var(--font-avantt), "Avantt Fallback", Arial, sans-serif;
-  --font-gridnik: var(--font-gridnik), "FoundryGridnik Fallback", Arial, sans-serif;
+  --font-heading: var(--font-merriweather), Georgia, "Times New Roman", serif; /* Merriweather 300 */
+  --font-body: var(--font-cabin), system-ui, -apple-system, sans-serif; /* Cabin 400 */
+  --font-button: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial, sans-serif; /* sans-serif 400 */
+  --font-illustration: var(--font-inter), system-ui, sans-serif; /* Inter */
 
   /* Colors */
   --color-cream: #fffaea; /* warm page background */
@@ -31,22 +33,29 @@
   /* Nav */
   --color-nav-cta: #e8e6e3;
 
-  /* Typography scale (px values from the reference) */
+  /* Typography scale — line-heights & tracking retuned for Merriweather (a light
+     serif needs more leading and looser letter-spacing than the old display sans). */
   --text-display-2xl: 80px;
-  --text-display-2xl--line-height: 0.9;
-  --text-display-2xl--letter-spacing: -4px;
+  --text-display-2xl--line-height: 1.1;
+  --text-display-2xl--letter-spacing: -1.5px;
   --text-display-xl: 64px;
-  --text-display-xl--line-height: 0.95;
-  --text-display-xl--letter-spacing: -3.2px;
+  --text-display-xl--line-height: 1.1;
+  --text-display-xl--letter-spacing: -1.2px;
   --text-display-lg: 58px;
-  --text-display-lg--line-height: 0.95;
-  --text-display-lg--letter-spacing: -2.9px;
+  --text-display-lg--line-height: 1.12;
+  --text-display-lg--letter-spacing: -1px;
   --text-headline-md: 56px;
-  --text-headline-md--line-height: 1;
-  --text-headline-md--letter-spacing: -2.4px;
+  --text-headline-md--line-height: 1.12;
+  --text-headline-md--letter-spacing: -1px;
+  --text-headline-sm: 48px;
+  --text-headline-sm--line-height: 1.15;
+  --text-headline-sm--letter-spacing: -0.8px;
+  --text-headline-xs: 40px;
+  --text-headline-xs--line-height: 1.18;
+  --text-headline-xs--letter-spacing: -0.6px;
   --text-display-sm: 32px;
-  --text-display-sm--line-height: 1.05;
-  --text-display-sm--letter-spacing: -1px;
+  --text-display-sm--line-height: 1.25;
+  --text-display-sm--letter-spacing: -0.4px;
   --text-eyebrow: 10px;
   --text-eyebrow--line-height: 1;
   --text-eyebrow--letter-spacing: 1px;
@@ -85,7 +94,24 @@ html {
 body {
   background: var(--color-cream);
   color: var(--color-text);
-  font-family: var(--font-avantt);
+  font-family: var(--font-body);
+  font-weight: 400;
+}
+
+/* Type roles — every element inherits body (Cabin 400) unless it opts in below. */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  font-weight: 300;
+}
+
+button {
+  font-family: var(--font-button);
+  font-weight: 400;
 }
 
 /* =========================================================================

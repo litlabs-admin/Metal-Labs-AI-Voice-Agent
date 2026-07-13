@@ -34,6 +34,38 @@ export const assets = {
     bottom: Array.from({ length: 18 }, (_, i) => `/design/integrations/bottom-${i}.png`),
   },
 
+  // §7 channel carousel — vector app icons that slide behind the Metal Labs hub tile.
+  channels: {
+    icons: [
+      "/design/channels/hubspot.svg",
+      "/design/channels/claude.svg",
+      "/design/channels/salesforce.svg",
+      "/design/channels/google-calendar.svg",
+      "/design/channels/whatsapp.svg",
+      "/design/channels/crm.svg",
+    ],
+  },
+
+  // §7b omnichannel card icons (order matches content.omnichannel.cards). Ported from
+  // the reference template's isometric vector set, recoloured to the mint accent; the
+  // reference reuses the same art for cards 1 and 3, so we do too.
+  omnichannelIcons: [
+    "/design/icons/omnichannel-a.svg",
+    "/design/icons/omnichannel-b.svg",
+    "/design/icons/omnichannel-a.svg",
+  ],
+
+  // §8 icon-tile backgrounds — the reference template's blue silk art, reused in its own
+  // repeating order (a, a, b, c, c, d) so the six tiles vary the same way the original does.
+  enterpriseTiles: [
+    "/design/tiles/tile-a.png",
+    "/design/tiles/tile-a.png",
+    "/design/tiles/tile-b.png",
+    "/design/tiles/tile-c.png",
+    "/design/tiles/tile-c.png",
+    "/design/tiles/tile-d.png",
+  ],
+
   // §8 enterprise-capability icons (order matches content.why.cells).
   enterpriseIcons: [
     "/design/icons/enterprise-0-headphone.svg",

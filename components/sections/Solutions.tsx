@@ -6,7 +6,7 @@ import styles from "./solutions/Solutions.module.css";
 
 const EASE = [0.44, 0, 0.56, 1] as const;
 
-/* ---- Section-heading word stagger — cinematic blur-focus reveal (same as Problem) ---- */
+/* ---- Section-heading word stagger - cinematic blur-focus reveal (same as Problem) ---- */
 const headerContainer = {
   hidden: {},
   show: { transition: { staggerChildren: 0.024 } },

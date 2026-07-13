@@ -6,7 +6,7 @@ import { Button } from "./Button";
 import { hero } from "@/lib/content";
 
 // Hero CTAs: "Book a Demo" (primary) + "Hear It Live" (secondary), which dials the
-// agent. No live backend yet — the pending state is a stub.
+// agent. No live backend yet - the pending state is a stub.
 export function HeroActions() {
   const [calling, setCalling] = useState(false);
 
@@ -17,7 +17,7 @@ export function HeroActions() {
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-3">
+    <div className="flex flex-wrap items-center gap-3 md:justify-end">
       <Button variant="light">{hero.cta}</Button>
       <Button variant="ghost" onClick={initiateCall} disabled={calling}>
         <PlayIcon className="size-3.5" />

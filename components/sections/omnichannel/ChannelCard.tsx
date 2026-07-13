@@ -12,7 +12,7 @@ const cardSpring = { type: "spring", bounce: 0, duration: 0.6 } as const;
 
 // Pain-point card, ported from the reference template.
 //
-// At rest the card shows only the icon (top) and the kicker + title (bottom) — the
+// At rest the card shows only the icon (top) and the kicker + title (bottom) - the
 // content column is `justify-between` inside a fixed 362px box. On hover the
 // description *mounts*, growing the text group, so the title slides up and the copy
 // fades in beneath it. Below xl the reference falls back to its "Phone" variant:
@@ -45,7 +45,7 @@ export function ChannelCard({
       )}
     >
       {/* The icon is pinned to the top by `justify-between` and never moves, and this
-          column's own height never changes — so neither needs a layout animation. */}
+          column's own height never changes - so neither needs a layout animation. */}
       <div className="relative flex w-full flex-none flex-col items-start justify-center gap-9 xl:h-px xl:flex-1 xl:justify-between xl:gap-0">
         {/* eslint-disable-next-line @next/next/no-img-element -- local static SVG, same as SmartImage */}
         <img

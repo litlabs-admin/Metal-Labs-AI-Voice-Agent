@@ -61,7 +61,7 @@ for (const [dest, url] of Object.entries(assets)) {
     console.log(`  ✓ ${dest} (${(buf.length / 1024).toFixed(0)}kb)`);
   } catch (err) {
     fail++;
-    console.warn(`  ✗ ${dest} — ${err.message} (will render dashed placeholder)`);
+    console.warn(`  ✗ ${dest} - ${err.message} (will render dashed placeholder)`);
   }
 }
 console.log(`\nDone. ${ok} fetched, ${skip} skipped, ${fail} failed.`);

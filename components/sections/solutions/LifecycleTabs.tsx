@@ -138,6 +138,7 @@ const cardVariant = {
 
 export default function LifecycleTabs() {
   const [activeId, setActiveId] = useState(TABS[0].id);
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
   const reduce = useReducedMotion();
   const active = TABS.find((t) => t.id === activeId) ?? TABS[0];
 
@@ -196,12 +197,14 @@ export default function LifecycleTabs() {
                 key={c.id}
                 className={[styles.card, i < 3 ? styles.cardSmall : styles.cardWide].join(" ")}
                 variants={reduce ? undefined : cardVariant}
+                onMouseEnter={() => setHoveredId(c.id)}
+                onMouseLeave={() => setHoveredId((h) => (h === c.id ? null : h))}
               >
                 <div className={styles.cardText}>
                   <h3 className={styles.cardTitle}>{c.title}</h3>
                   <p className={styles.cardDesc}>{c.desc}</p>
                 </div>
-                <Mockup id={c.illo} hovered />
+                <Mockup id={c.illo} hovered={hoveredId === c.id} index={i} />
               </motion.article>
             ))}
           </motion.div>

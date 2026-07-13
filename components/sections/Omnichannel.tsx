@@ -4,11 +4,7 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { WordScrollReveal } from "@/components/ui/WordScrollReveal";
 import { ChannelCard } from "./omnichannel/ChannelCard";
 
-// The reference draws its eyebrow mark as two offset gradient bars (the second
-// rotated 180°) inside a 16x8 box, rather than as an icon.
-const TAG_GRADIENT = "linear-gradient(270deg, #0d6b4d 0%, #62f6b5 100%)";
-
-// §4 — white section directly under the hero, ported from the reference template's
+// §4 - white section directly under the hero, ported from the reference template's
 // "Problem" section:
 // eyebrow + scroll-revealed headline + a zero-gap strip of three hover cards.
 // Card hairlines: every card carries its top+left border and the strip closes
@@ -22,19 +18,9 @@ export function Omnichannel() {
       className="w-full bg-white px-5 py-20 md:px-[30px] md:py-[100px] xl:py-[140px]"
     >
       <div className="mx-auto flex w-full max-w-[var(--container-site)] flex-col items-center gap-10 md:gap-[60px] xl:gap-20">
-        {/* Title block — 828px cap, 20px rhythm, centred (matches the reference) */}
+        {/* Title block - 828px cap, 20px rhythm, centred (matches the reference) */}
         <div className="flex w-full max-w-[828px] flex-col items-center gap-5">
-          <div className="flex w-min items-center gap-1.5 py-1 pr-2">
-            <span className="relative h-2 w-4 flex-none">
-              <span
-                className="absolute left-0 top-1 aspect-[3.579/1] w-[88%]"
-                style={{ background: TAG_GRADIENT }}
-              />
-              <span
-                className="absolute right-0 top-0 aspect-[3.5/1] w-[88%] rotate-180"
-                style={{ background: TAG_GRADIENT }}
-              />
-            </span>
+          <div className="flex w-min items-center py-1 pr-2">
             <Eyebrow className="whitespace-pre text-text">{omnichannel.eyebrow}</Eyebrow>
           </div>
 

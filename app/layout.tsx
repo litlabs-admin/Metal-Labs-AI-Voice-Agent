@@ -3,7 +3,7 @@ import { merriweather, cabin, inter, switzer } from "./fonts";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Metal Labs — The only AI agent platform mortgage lenders will ever need.",
+  title: "Metal Labs | The only AI agent platform mortgage lenders will ever need.",
   description:
     "From the first lead call to the final payment, Metal Labs handles every borrower conversation across voice, text, and email. One platform. No gaps. No excuses.",
 };

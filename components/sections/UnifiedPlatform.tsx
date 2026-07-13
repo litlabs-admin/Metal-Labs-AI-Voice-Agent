@@ -5,7 +5,7 @@ import { Reveal } from "@/components/ui/Reveal";
 import { SmartImage } from "@/components/ui/SmartImage";
 import { ProductLottie } from "@/components/ui/ProductLottie";
 
-// §5 — cream section: centered eyebrow + headline + subhead, then a 2-column row
+// §5 - cream section: centered eyebrow + headline + subhead, then a 2-column row
 // (sub-feature text left, product screenshot right) matching Vapi's airfoil product layout.
 export function UnifiedPlatform() {
   return (

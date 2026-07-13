@@ -1,4 +1,4 @@
-// Centralized asset paths — swap these in ONE place to replace Vapi reference imagery
+// Centralized asset paths - swap these in ONE place to replace Vapi reference imagery
 // with real Metal Labs assets. Files live in /public/design (copied on-disk assets +
 // CDN assets pulled by scripts/fetch-assets.mjs).
 
@@ -13,8 +13,8 @@ export const assets = {
   // Product "screenshots". TODO: replace with Metal Labs screenshots.
   product: {
     // Lottie animations that stand in as the platform/agents visuals (as on Vapi).
-    agentsLottie: "/design/lottie/product-0.json", // §5 — "Agents" dashboard
-    reschedulerLottie: "/design/lottie/product-1.json", // §6 — appointment rescheduler
+    agentsLottie: "/design/lottie/product-0.json", // §5 - "Agents" dashboard
+    reschedulerLottie: "/design/lottie/product-1.json", // §6 - appointment rescheduler
     waveformIcon: "/design/logos/icon-waveform.svg",
     thermometerIcon: "/design/icons/thermometer.svg",
   },
@@ -34,7 +34,7 @@ export const assets = {
     bottom: Array.from({ length: 18 }, (_, i) => `/design/integrations/bottom-${i}.png`),
   },
 
-  // §7 channel carousel — vector app icons that slide behind the Metal Labs hub tile.
+  // §7 channel carousel - vector app icons that slide behind the Metal Labs hub tile.
   channels: {
     icons: [
       "/design/channels/hubspot.svg",
@@ -55,7 +55,7 @@ export const assets = {
     "/design/icons/omnichannel-a.svg",
   ],
 
-  // §8 icon-tile backgrounds — the reference template's blue silk art, reused in its own
+  // §8 icon-tile backgrounds - the reference template's blue silk art, reused in its own
   // repeating order (a, a, b, c, c, d) so the six tiles vary the same way the original does.
   enterpriseTiles: [
     "/design/tiles/tile-a.png",
@@ -74,6 +74,15 @@ export const assets = {
     "/design/icons/enterprise-3-trend-up.svg",
     "/design/icons/enterprise-4-select-area.png",
     "/design/icons/enterprise-5-shield-check.svg",
+  ],
+
+  // §12b compliance card icons (order matches content.compliance.cards). Pixel-art glyphs
+  // lifted verbatim from the reference template's Compliance section and rendered as CSS
+  // masks so they take the section's ink colour rather than shipping a baked-in fill.
+  complianceIcons: [
+    "/design/icons/compliance-0-check.svg",
+    "/design/icons/compliance-1-lock.svg",
+    "/design/icons/compliance-2-server.svg",
   ],
 
   // §9 featured case study (Kavak reference). TODO: replace with Metal Labs case study.

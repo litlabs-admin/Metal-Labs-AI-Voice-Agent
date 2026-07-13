@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { LogoMark } from "@/components/ui/Icons";
 import { cn } from "@/lib/cn";
 
-// §2 — sticky nav: transparent over the dark hero, solid + blurred once scrolled.
+// §2 - sticky nav: transparent over the dark hero, solid + blurred once scrolled.
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
 

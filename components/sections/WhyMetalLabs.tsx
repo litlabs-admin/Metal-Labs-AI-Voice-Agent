@@ -3,24 +3,17 @@ import { assets } from "@/lib/assets";
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/Reveal";
 import styles from "./WhyMetalLabs.module.css";
 
-// §8 — "Built for Mortgage": left-aligned title block over a zero-gap card grid whose cards
+// §8 - "Built for Mortgage": left-aligned title block over a zero-gap card grid whose cards
 // share hairline borders (the reference template's "Industry" section layout). Each card leads
 // with a blue silk tile carrying a white glyph, then a serif title and body.
-// All responsive sizing lives in WhyMetalLabs.module.css — see the note at the top of that file.
-
-// The reference's accent gradient, used verbatim on the eyebrow tag bars.
-const ACCENT = "linear-gradient(270deg, #0036FA 0%, #C0E2F9 100%)";
+// All responsive sizing lives in WhyMetalLabs.module.css - see the note at the top of that file.
 
 export function WhyMetalLabs() {
   return (
     <section id="use-cases" data-nav-theme="light" className={`${styles.section} w-full bg-cream-2`}>
       <div className={styles.inner}>
         <Reveal className={styles.titleBlock}>
-          <span className="flex items-center gap-2">
-            <span aria-hidden className="flex items-center gap-px">
-              <span className="block h-4 w-2" style={{ background: ACCENT }} />
-              <span className="block h-4 w-2 rotate-180" style={{ background: ACCENT }} />
-            </span>
+          <span className="flex items-center">
             <span className="font-illustration text-[14px] font-medium uppercase leading-[16.5px] text-text">
               {why.eyebrow}
             </span>

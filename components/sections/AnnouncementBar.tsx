@@ -1,7 +1,7 @@
 import { announcement } from "@/lib/content";
 import { ArrowRight } from "@/components/ui/Icons";
 
-// §1 — slim green-tinted top announcement bar.
+// §1 - slim green-tinted top announcement bar.
 export function AnnouncementBar() {
   return (
     <div className="relative h-9 w-full overflow-hidden bg-ink text-text-on-dark">

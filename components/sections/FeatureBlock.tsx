@@ -4,7 +4,7 @@ import { Reveal } from "@/components/ui/Reveal";
 import { SmartImage } from "@/components/ui/SmartImage";
 import { ProductLottie } from "@/components/ui/ProductLottie";
 
-// §6 — two-column feature: analytics/rescheduler screenshot (left) + icon/headline/body (right).
+// §6 - two-column feature: analytics/rescheduler screenshot (left) + icon/headline/body (right).
 export function FeatureBlock() {
   return (
     <section

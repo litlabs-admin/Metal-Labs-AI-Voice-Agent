@@ -4,7 +4,7 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Reveal } from "@/components/ui/Reveal";
 import { IntegrationCarousel } from "@/components/ui/IntegrationCarousel";
 
-// §7 — dark band: centered eyebrow + headline, with the full-bleed integration carousel
+// §7 - dark band: centered eyebrow + headline, with the full-bleed integration carousel
 // directly beneath (channel tiles stepping past the Metal Labs hub).
 export function ChannelsStrip() {
   return (

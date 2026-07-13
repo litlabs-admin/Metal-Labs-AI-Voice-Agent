@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   motion,
+  useInView,
   useReducedMotion,
   useMotionValue,
   useTransform,
@@ -13,22 +14,60 @@ import styles from "./Solutions.module.css";
 const EASE = [0.44, 0, 0.56, 1] as const;
 const SPRING_EASE = [0.22, 1, 0.36, 1] as const;
 
-/* Shared motion state for an illustration. Only the active tab's 5 cards are
-   ever mounted at once, so all loops (`repeat: Infinity`) run unconditionally
-   rather than gating on in-view — the compositor cost is negligible at that
-   scale. The `ref` is attached to the illustration's root via `rootRef`. */
-function useMockupMotion(hovered: boolean) {
+/* Dwell times for the working → done → working loop. `done` holds longer so the
+   resolved state (the point of each illustration) is what the eye lands on. */
+const WORK_MS = 1900;
+const DONE_MS = 3400;
+const STAGGER_MS = 280;
+
+/* Shared motion state for an illustration.
+
+   `active` is the illustration's "work finished" state. It cycles on a slow loop
+   so the cards read as live systems rather than frozen screenshots, and hovering
+   a card snaps it to the resolved state on demand. The loop only runs while the
+   card is on screen, and reduced-motion pins everything to the resolved state. */
+function useMockupMotion(hovered: boolean, index = 0) {
   const reduce = useReducedMotion();
   const ref = useRef<HTMLDivElement | null>(null);
-  const active = hovered || !!reduce;
-  const loop = !reduce;
-  return { ref, active, loop };
+  const inView = useInView(ref, { amount: 0.3 });
+  const [cycled, setCycled] = useState(false);
+
+  useEffect(() => {
+    if (reduce || !inView) return;
+    let timer: ReturnType<typeof setTimeout>;
+    let stopped = false;
+    const schedule = (next: boolean, wait: number) => {
+      timer = setTimeout(() => {
+        if (stopped) return;
+        setCycled(next);
+        schedule(!next, next ? DONE_MS : WORK_MS);
+      }, wait);
+    };
+    schedule(true, 500 + index * STAGGER_MS);
+    return () => {
+      stopped = true;
+      clearTimeout(timer);
+    };
+  }, [reduce, inView, index]);
+
+  const loop = !reduce && inView;
+  return { ref, active: reduce ? true : hovered || cycled, loop, inView };
+}
+
+/* Rotating index - used where the illustration walks through a list. */
+function useStep(count: number, ms: number, run: boolean) {
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    if (!run) return;
+    const id = setInterval(() => setI((p) => (p + 1) % count), ms);
+    return () => clearInterval(id);
+  }, [count, ms, run]);
+  return run ? i : 0;
 }
 
 /* ============================================================
-   Shared shell — light card surface + an in-view entrance on the
-   inner content. (Previously a full-bleed dark photo backdrop;
-   now a soft off-white panel since cards sit on a light section.)
+   Shared shell - light card surface + an in-view entrance on the
+   inner content, plus a slow ambient sheen across the panel.
    ============================================================ */
 function Illustration({
   children,
@@ -87,7 +126,7 @@ function LiveDot({ loop }: { loop: boolean }) {
 }
 
 function Waveform({ active, loop }: { active: boolean; loop: boolean }) {
-  // Peak heights as a fraction of the bar's full height — scaleY keeps every
+  // Peak heights as a fraction of the bar's full height - scaleY keeps every
   // bar inside the container so they can never overflow into the row above.
   const peaks = [0.35, 0.55, 0.85, 0.45, 0.7, 0.3, 0.6, 0.95, 0.4, 0.65, 0.5, 0.8];
   return (
@@ -127,25 +166,38 @@ function Typing({ loop }: { loop: boolean }) {
   );
 }
 
+/* Counts up once, the first time the card scrolls into view - it never runs
+   backwards, so the loop can't turn a headline figure into a yo-yo. */
 function CountUp({
   to,
-  active,
+  run,
   format,
 }: {
   to: number;
-  active: boolean;
+  run: boolean;
   format: (n: number) => string;
 }) {
-  const mv = useMotionValue(active ? to : 0);
+  const mv = useMotionValue(0);
   const text = useTransform(mv, (v) => format(v));
   useEffect(() => {
-    const controls = animateValue(mv, active ? to : 0, {
-      duration: active ? 1.1 : 0.3,
-      ease: SPRING_EASE,
-    });
+    if (!run) return;
+    const controls = animateValue(mv, to, { duration: 1.1, ease: SPRING_EASE });
     return controls.stop;
-  }, [active, to, mv]);
+  }, [run, to, mv]);
   return <motion.span>{text}</motion.span>;
+}
+
+/* Progress bar with a sheen that sweeps while work is in flight. */
+function Progress({ pct, working }: { pct: number; working: boolean }) {
+  return (
+    <div className={styles.progressBar}>
+      <motion.span
+        className={[styles.progressFill, working ? styles.progressFillLive : ""].join(" ").trim()}
+        animate={{ width: `${pct}%` }}
+        transition={{ duration: 0.7, ease: SPRING_EASE }}
+      />
+    </div>
+  );
 }
 
 const reveal = (active: boolean, delay = 0) => ({
@@ -153,18 +205,20 @@ const reveal = (active: boolean, delay = 0) => ({
   transition: { duration: 0.45, ease: SPRING_EASE, delay: active ? delay : 0 },
 });
 
+type IlloProps = { hovered: boolean; index: number };
+
 /* ============================================================
-   1 — Inbound lead qualification
+   1 - Inbound lead qualification
    ============================================================ */
-function Inbound({ hovered }: { hovered: boolean }) {
-  const { ref, active, loop } = useMockupMotion(hovered);
+function Inbound({ hovered, index }: IlloProps) {
+  const { ref, active, loop } = useMockupMotion(hovered, index);
   return (
     <Illustration rootRef={ref}>
       <div className={styles.subCard}>
         <div className={styles.illoRow}>
           <span className={styles.avatar}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/solutions/avatar-1.png" alt="" width={40} height={40} />
+            <img src="/solutions/avatar-1.png" alt="" width={36} height={36} />
           </span>
           <div className={styles.userText}>
             <span className={styles.userName}>Cassy Morgan</span>
@@ -201,32 +255,31 @@ function Inbound({ hovered }: { hovered: boolean }) {
 }
 
 /* ============================================================
-   2 — Outbound lead calling
+   2 - Outbound lead calling
    ============================================================ */
-function Outbound({ hovered }: { hovered: boolean }) {
-  const { ref, active, loop } = useMockupMotion(hovered);
-  const rows = [
-    { name: "Aged lead · Jan ’23", state: "connected" as const },
-    { name: "CRM contact #4821", state: "dialing" as const },
-    { name: "Purchased list", state: "queued" as const },
-  ];
+function Outbound({ hovered, index }: IlloProps) {
+  const { ref, loop } = useMockupMotion(hovered, index);
+  const rows = ["Aged lead · Jan ’23", "CRM contact #4821", "Purchased list"];
+  // The dialer walks the list: one line lands, the next is ringing, the rest wait.
+  const at = useStep(rows.length, 2200, loop);
   return (
     <Illustration rootRef={ref}>
       <div className={styles.subCard}>
-        {rows.map((r) => {
-          const connected = active && r.state === "connected";
+        {rows.map((name, i) => {
+          const connected = i === at;
+          const dialing = i === (at + 1) % rows.length;
           return (
-            <div key={r.name} className={styles.dialRow}>
+            <div key={name} className={styles.dialRow}>
               <span
                 className={[
                   styles.dialDot,
                   connected ? styles.dialDotOn : "",
-                  r.state === "dialing" ? styles.dialDotRing : "",
+                  dialing ? styles.dialDotRing : "",
                 ]
                   .join(" ")
                   .trim()}
               >
-                {r.state === "dialing" && loop && (
+                {dialing && loop && (
                   <motion.span
                     className={styles.dialPing}
                     animate={{ scale: [1, 2], opacity: [0.6, 0] }}
@@ -234,19 +287,18 @@ function Outbound({ hovered }: { hovered: boolean }) {
                   />
                 )}
               </span>
-              <span className={styles.dialName}>{r.name}</span>
+              <span className={styles.dialName}>{name}</span>
               {connected ? (
                 <motion.span
                   className={styles.handoffTag}
-                  initial={false}
+                  initial={{ opacity: 0, x: 6 }}
                   animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.35, ease: SPRING_EASE }}
                 >
                   → Handed off
                 </motion.span>
               ) : (
-                <span className={styles.dialState}>
-                  {r.state === "dialing" ? "Dialing…" : r.state === "queued" ? "Queued" : "Warm"}
-                </span>
+                <span className={styles.dialState}>{dialing ? "Dialing…" : "Queued"}</span>
               )}
             </div>
           );
@@ -257,12 +309,11 @@ function Outbound({ hovered }: { hovered: boolean }) {
 }
 
 /* ============================================================
-   3 — Document collection
+   3 - Document collection
    ============================================================ */
-function Documents({ hovered }: { hovered: boolean }) {
-  const { ref, active, loop } = useMockupMotion(hovered);
+function Documents({ hovered, index }: IlloProps) {
+  const { ref, active, loop } = useMockupMotion(hovered, index);
   const docs = [
-    { name: "W-2 form", always: true },
     { name: "Bank statement", always: true },
     { name: "Photo ID", always: true },
     { name: "Pay stub", always: false },
@@ -282,16 +333,21 @@ function Documents({ hovered }: { hovered: boolean }) {
             <div key={d.name} className={styles.docItem}>
               <Check ticked={d.always || active} />
               <span className={styles.docName}>{d.name}</span>
+              {!d.always && !active && (
+                <motion.span
+                  className={[styles.acctBadge, styles.acctBadgeWarn, styles.docItemBadge].join(" ")}
+                  animate={loop ? { opacity: [1, 0.55, 1] } : { opacity: 1 }}
+                  transition={
+                    loop ? { duration: 1.6, repeat: Infinity, ease: "easeInOut" } : undefined
+                  }
+                >
+                  Chasing
+                </motion.span>
+              )}
             </div>
           ))}
         </div>
-        <div className={styles.progressBar}>
-          <motion.span
-            className={styles.progressFill}
-            animate={{ width: `${(done / docs.length) * 100}%` }}
-            transition={{ duration: 0.6, ease: SPRING_EASE }}
-          />
-        </div>
+        <Progress pct={(done / docs.length) * 100} working={!active} />
       </div>
       <div className={styles.channelChips}>
         {["Voice", "Text", "Email"].map((c, i) => (
@@ -300,7 +356,9 @@ function Documents({ hovered }: { hovered: boolean }) {
             className={styles.channelChip}
             animate={loop ? { opacity: [0.55, 1, 0.55] } : { opacity: 1 }}
             transition={
-              loop ? { duration: 2.1, repeat: Infinity, delay: i * 0.5, ease: "easeInOut" } : undefined
+              loop
+                ? { duration: 2.1, repeat: Infinity, delay: i * 0.5, ease: "easeInOut" }
+                : undefined
             }
           >
             {c}
@@ -312,10 +370,10 @@ function Documents({ hovered }: { hovered: boolean }) {
 }
 
 /* ============================================================
-   4 — After-hours support
+   4 - After-hours support
    ============================================================ */
-function AfterHours({ hovered }: { hovered: boolean }) {
-  const { ref, active, loop } = useMockupMotion(hovered);
+function AfterHours({ hovered, index }: IlloProps) {
+  const { ref, active, loop } = useMockupMotion(hovered, index);
   return (
     <Illustration rootRef={ref}>
       <div className={styles.afterRow}>
@@ -339,13 +397,13 @@ function AfterHours({ hovered }: { hovered: boolean }) {
         </div>
       </div>
       <div className={styles.subCard}>
-        <div className={[styles.bubble, styles.bubbleIn].join(" ")}>
-          Are you open right now?
-        </div>
+        <div className={[styles.bubble, styles.bubbleIn].join(" ")}>Are you open right now?</div>
         {active ? (
           <motion.div
             className={[styles.bubble, styles.bubbleOut].join(" ")}
-            {...reveal(active, 0.15)}
+            initial={{ opacity: 0, y: 8, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.4, ease: SPRING_EASE }}
           >
             Always, let&apos;s get you started.
           </motion.div>
@@ -360,10 +418,10 @@ function AfterHours({ hovered }: { hovered: boolean }) {
 }
 
 /* ============================================================
-   5 — Website chat
+   5 - Website chat
    ============================================================ */
-function Chat({ hovered }: { hovered: boolean }) {
-  const { ref, active, loop } = useMockupMotion(hovered);
+function Chat({ hovered, index }: IlloProps) {
+  const { ref, active, loop } = useMockupMotion(hovered, index);
   return (
     <Illustration rootRef={ref}>
       <div className={styles.subCard}>
@@ -373,7 +431,9 @@ function Chat({ hovered }: { hovered: boolean }) {
         {active ? (
           <motion.div
             className={[styles.bubble, styles.bubbleOut].join(" ")}
-            {...reveal(active, 0.1)}
+            initial={{ opacity: 0, y: 8, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.4, ease: SPRING_EASE }}
           >
             From 6.1% APR, want me to check yours?
           </motion.div>
@@ -382,7 +442,7 @@ function Chat({ hovered }: { hovered: boolean }) {
             <Typing loop={loop} />
           </div>
         )}
-        <motion.button className={styles.ctaChip} {...reveal(active, 0.28)}>
+        <motion.button className={styles.ctaChip} {...reveal(active, 0.22)}>
           Book a call →
         </motion.button>
       </div>
@@ -391,11 +451,11 @@ function Chat({ hovered }: { hovered: boolean }) {
 }
 
 /* ============================================================
-   6 — Payment reminders
+   6 - Payment reminders
    ============================================================ */
-function Payments({ hovered }: { hovered: boolean }) {
-  const { ref, active, loop } = useMockupMotion(hovered);
-  const cells = Array.from({ length: 21 }, (_, i) => i + 1);
+function Payments({ hovered, index }: IlloProps) {
+  const { ref, active, loop } = useMockupMotion(hovered, index);
+  const cells = Array.from({ length: 14 }, (_, i) => i + 6);
   const due = 12;
   return (
     <Illustration rootRef={ref}>
@@ -433,7 +493,9 @@ function Payments({ hovered }: { hovered: boolean }) {
               className={styles.channelChip}
               animate={loop ? { opacity: [0.55, 1, 0.55] } : { opacity: 1 }}
               transition={
-                loop ? { duration: 2.1, repeat: Infinity, delay: i * 0.45, ease: "easeInOut" } : undefined
+                loop
+                  ? { duration: 2.1, repeat: Infinity, delay: i * 0.45, ease: "easeInOut" }
+                  : undefined
               }
             >
               {c}
@@ -449,10 +511,10 @@ function Payments({ hovered }: { hovered: boolean }) {
 }
 
 /* ============================================================
-   7 — Delinquency outreach
+   7 - Delinquency outreach
    ============================================================ */
-function Delinquency({ hovered }: { hovered: boolean }) {
-  const { ref, active, loop } = useMockupMotion(hovered);
+function Delinquency({ hovered, index }: IlloProps) {
+  const { ref, active, loop } = useMockupMotion(hovered, index);
   const steps = ["Apr", "May", "Jun"];
   return (
     <Illustration rootRef={ref}>
@@ -465,8 +527,9 @@ function Delinquency({ hovered }: { hovered: boolean }) {
           {active ? (
             <motion.span
               className={[styles.acctBadge, styles.acctBadgeOk].join(" ")}
-              initial={false}
-              animate={{ scale: 1 }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.35, ease: SPRING_EASE }}
             >
               On plan
             </motion.span>
@@ -508,12 +571,11 @@ function Delinquency({ hovered }: { hovered: boolean }) {
 }
 
 /* ============================================================
-   8 — Collections
+   8 - Collections
    ============================================================ */
-function Collections({ hovered }: { hovered: boolean }) {
-  const { ref, active } = useMockupMotion(hovered);
-  const fmt = (n: number) =>
-    "$" + Math.round(n).toLocaleString("en-US");
+function Collections({ hovered, index }: IlloProps) {
+  const { ref, active, inView } = useMockupMotion(hovered, index);
+  const fmt = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
   return (
     <Illustration rootRef={ref}>
       <div className={styles.subCard}>
@@ -544,17 +606,11 @@ function Collections({ hovered }: { hovered: boolean }) {
           </span>
         </div>
         <span className={styles.recoverAmount}>
-          <CountUp to={1284500} active={active} format={fmt} />
+          <CountUp to={1284500} run={inView} format={fmt} />
         </span>
-        <div className={styles.progressBar}>
-          <motion.span
-            className={styles.progressFill}
-            animate={{ width: active ? "82%" : "34%" }}
-            transition={{ duration: 1, ease: SPRING_EASE }}
-          />
-        </div>
+        <Progress pct={active ? 82 : 58} working={!active} />
       </div>
-      <motion.div className={styles.bookedChip} {...reveal(active, 0.2)}>
+      <motion.div className={styles.bookedChip} {...reveal(active, 0.18)}>
         <span className={styles.bookedIcon}>🤝</span>
         <span>Payment arrangement set</span>
       </motion.div>
@@ -563,16 +619,15 @@ function Collections({ hovered }: { hovered: boolean }) {
 }
 
 /* ============================================================
-   9 — Payoff and loan inquiries
+   9 - Payoff and loan inquiries
    ============================================================ */
-function Payoff({ hovered }: { hovered: boolean }) {
-  const { ref, active, loop } = useMockupMotion(hovered);
+function Payoff({ hovered, index }: IlloProps) {
+  const { ref, active, loop, inView } = useMockupMotion(hovered, index);
   const fmt = (n: number) =>
-    "$" +
-    n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   return (
     <Illustration rootRef={ref}>
-      <div className={[styles.bubble, styles.bubbleIn, styles.queryBubble].join(" ")}>
+      <div className={[styles.bubble, styles.bubbleIn].join(" ")}>
         What&apos;s my payoff amount?
       </div>
       <div className={styles.subCard}>
@@ -587,11 +642,22 @@ function Payoff({ hovered }: { hovered: boolean }) {
           </motion.span>
         </div>
         <span className={styles.answerAmount}>
-          <CountUp to={184320.55} active={active} format={fmt} />
+          <CountUp to={184320.55} run={inView} format={fmt} />
         </span>
         <div className={styles.loanRow}>
           <span className={styles.permName}>Loan status</span>
-          <span className={styles.loanGood}>Current</span>
+          {active ? (
+            <motion.span
+              className={styles.loanGood}
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, ease: SPRING_EASE }}
+            >
+              Current
+            </motion.span>
+          ) : (
+            <span className={styles.dialState}>Checking…</span>
+          )}
         </div>
       </div>
     </Illustration>
@@ -599,36 +665,37 @@ function Payoff({ hovered }: { hovered: boolean }) {
 }
 
 /* ============================================================
-   10 — Condition chasing
+   10 - Condition chasing
    ============================================================ */
-function ConditionChasing({ hovered }: { hovered: boolean }) {
-  const { ref, loop } = useMockupMotion(hovered);
+function ConditionChasing({ hovered, index }: IlloProps) {
+  const { ref, active, loop } = useMockupMotion(hovered, index);
   const conditions = [
-    { name: "Paystubs (30 days)", done: true },
-    { name: "Bank statement", done: true },
-    { name: "Letter of explanation", done: true },
-    { name: "Homeowners insurance", done: false },
+    { name: "Paystubs (30 days)", always: true },
+    { name: "Letter of explanation", always: true },
+    { name: "Homeowners insurance", always: false },
   ];
-  const cleared = conditions.filter((c) => c.done).length;
+  const cleared = conditions.filter((c) => c.always || active).length;
   return (
     <Illustration rootRef={ref}>
       <div className={styles.subCard}>
         <div className={styles.docHead}>
           <span className={styles.userName}>Underwriting conditions</span>
           <span className={styles.docCount}>
-            {cleared} of {conditions.length} cleared
+            {cleared} of {conditions.length}
           </span>
         </div>
         <div className={styles.docList}>
           {conditions.map((c) => (
             <div key={c.name} className={styles.docItem}>
-              <Check ticked={c.done} />
+              <Check ticked={c.always || active} />
               <span className={styles.docName}>{c.name}</span>
-              {!c.done && (
+              {!c.always && !active && (
                 <motion.span
                   className={[styles.acctBadge, styles.acctBadgeWarn, styles.docItemBadge].join(" ")}
                   animate={loop ? { opacity: [1, 0.55, 1] } : { opacity: 1 }}
-                  transition={loop ? { duration: 1.6, repeat: Infinity, ease: "easeInOut" } : undefined}
+                  transition={
+                    loop ? { duration: 1.6, repeat: Infinity, ease: "easeInOut" } : undefined
+                  }
                 >
                   Chasing
                 </motion.span>
@@ -636,23 +703,17 @@ function ConditionChasing({ hovered }: { hovered: boolean }) {
             </div>
           ))}
         </div>
-        <div className={styles.progressBar}>
-          <motion.span
-            className={styles.progressFill}
-            animate={{ width: `${(cleared / conditions.length) * 100}%` }}
-            transition={{ duration: 0.6, ease: SPRING_EASE }}
-          />
-        </div>
+        <Progress pct={(cleared / conditions.length) * 100} working={!active} />
       </div>
     </Illustration>
   );
 }
 
 /* ============================================================
-   11 — Employment & income verification (VOE/VOIE)
+   11 - Employment & income verification (VOE/VOIE)
    ============================================================ */
-function VoeVoie({ hovered }: { hovered: boolean }) {
-  const { ref, active } = useMockupMotion(hovered);
+function VoeVoie({ hovered, index }: IlloProps) {
+  const { ref, active } = useMockupMotion(hovered, index);
   const rows = [
     { label: "Employer", value: "Confirmed" },
     { label: "Income", value: "Confirmed" },
@@ -663,17 +724,36 @@ function VoeVoie({ hovered }: { hovered: boolean }) {
       <div className={styles.subCard}>
         <div className={styles.docHead}>
           <span className={styles.userName}>Income &amp; employment</span>
-          <span className={[styles.statusPill, active ? styles.statusPillDone : ""].join(" ").trim()}>
-            <Check ticked={active} /> {active ? "Verified" : "Checking…"}
+          <span
+            className={[styles.statusPill, active ? styles.statusPillDone : ""].join(" ").trim()}
+          >
+            {active ? (
+              <>
+                <Check ticked /> Verified
+              </>
+            ) : (
+              <>
+                <span className={styles.spinner} /> Checking…
+              </>
+            )}
           </span>
         </div>
         <div className={styles.docList}>
           {rows.map((r, i) => (
             <div key={r.label} className={styles.permItem}>
               <span className={styles.permName}>{r.label}</span>
-              <motion.span className={styles.loanGood} {...reveal(active, i * 0.1)}>
-                {r.value}
-              </motion.span>
+              {active ? (
+                <motion.span
+                  className={styles.loanGood}
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.35, delay: i * 0.1, ease: SPRING_EASE }}
+                >
+                  {r.value}
+                </motion.span>
+              ) : (
+                <span className={styles.dialState}>Pending</span>
+              )}
             </div>
           ))}
         </div>
@@ -683,13 +763,13 @@ function VoeVoie({ hovered }: { hovered: boolean }) {
 }
 
 /* ============================================================
-   12 — Title & appraisal scheduling
+   12 - Title & appraisal scheduling
    ============================================================ */
-function TitleAppraisal({ hovered }: { hovered: boolean }) {
-  const { ref, active } = useMockupMotion(hovered);
+function TitleAppraisal({ hovered, index }: IlloProps) {
+  const { ref, active } = useMockupMotion(hovered, index);
   const vendors = [
-    { name: "Title", sub: "Placed today", status: "Ordered" },
-    { name: "Appraisal", sub: "Fri, 9:00 AM", status: "Scheduled" },
+    { name: "Title", sub: "Placed today", pending: "Ordering…", done: "Ordered" },
+    { name: "Appraisal", sub: "Fri, 9:00 AM", pending: "Finding a slot…", done: "Scheduled" },
   ];
   return (
     <Illustration rootRef={ref}>
@@ -700,15 +780,26 @@ function TitleAppraisal({ hovered }: { hovered: boolean }) {
         </div>
         <div className={styles.docList}>
           {vendors.map((v, i) => (
-            <motion.div key={v.name} className={styles.vendorRow} {...reveal(active, i * 0.12)}>
+            <div key={v.name} className={styles.vendorRow}>
               <div className={styles.userText}>
                 <span className={styles.userName}>{v.name}</span>
                 <span className={styles.userRole}>{v.sub}</span>
               </div>
-              <span className={[styles.statusPill, styles.statusPillDone].join(" ")}>
-                <Check ticked /> {v.status}
-              </span>
-            </motion.div>
+              {active ? (
+                <motion.span
+                  className={[styles.statusPill, styles.statusPillDone].join(" ")}
+                  initial={{ opacity: 0, scale: 0.94 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.35, delay: i * 0.12, ease: SPRING_EASE }}
+                >
+                  <Check ticked /> {v.done}
+                </motion.span>
+              ) : (
+                <span className={styles.statusPill}>
+                  <span className={styles.spinner} /> {v.pending}
+                </span>
+              )}
+            </div>
           ))}
         </div>
       </div>
@@ -717,23 +808,23 @@ function TitleAppraisal({ hovered }: { hovered: boolean }) {
 }
 
 /* ============================================================
-   13 — Milestone updates
+   13 - Milestone updates
    ============================================================ */
-function MilestoneUpdates({ hovered }: { hovered: boolean }) {
-  const { ref, active } = useMockupMotion(hovered);
+function MilestoneUpdates({ hovered, index }: IlloProps) {
+  const { ref, active } = useMockupMotion(hovered, index);
   const milestones = [
-    { label: "Appraisal ordered", done: true },
-    { label: "Clear to close", done: true },
-    { label: "Closing scheduled", done: false },
+    { label: "Appraisal ordered", always: true },
+    { label: "Clear to close", always: true },
+    { label: "Closing scheduled", always: false },
   ];
   return (
     <Illustration rootRef={ref}>
       <div className={styles.subCard}>
         <span className={styles.userName}>Loan milestones · Live from LOS</span>
         <div className={styles.docList}>
-          {milestones.map((m, i) => (
+          {milestones.map((m) => (
             <div key={m.label} className={styles.docItem}>
-              <Check ticked={m.done || (active && i === 2)} />
+              <Check ticked={m.always || active} />
               <span className={styles.docName}>{m.label}</span>
             </div>
           ))}
@@ -742,7 +833,7 @@ function MilestoneUpdates({ hovered }: { hovered: boolean }) {
           <motion.span className={styles.channelChip} {...reveal(active, 0.1)}>
             Borrower notified
           </motion.span>
-          <motion.span className={styles.channelChip} {...reveal(active, 0.2)}>
+          <motion.span className={styles.channelChip} {...reveal(active, 0.22)}>
             Realtor notified
           </motion.span>
         </div>
@@ -752,19 +843,23 @@ function MilestoneUpdates({ hovered }: { hovered: boolean }) {
 }
 
 /* ============================================================
-   14 — Disclosure chasing
+   14 - Disclosure chasing
    ============================================================ */
-function DisclosureChasing({ hovered }: { hovered: boolean }) {
-  const { ref, active, loop } = useMockupMotion(hovered);
+function DisclosureChasing({ hovered, index }: IlloProps) {
+  const { ref, active, loop } = useMockupMotion(hovered, index);
   return (
     <Illustration rootRef={ref}>
       <div className={styles.subCard}>
         <div className={styles.docHead}>
           <span className={styles.userName}>Loan estimate</span>
           <motion.span
-            className={[styles.acctBadge, active ? styles.acctBadgeOk : styles.acctBadgeWarn].join(" ")}
-            animate={!active && loop ? { opacity: [1, 0.55, 1] } : {}}
-            transition={!active && loop ? { duration: 1.5, repeat: Infinity, ease: "easeInOut" } : undefined}
+            className={[styles.acctBadge, active ? styles.acctBadgeOk : styles.acctBadgeWarn].join(
+              " "
+            )}
+            animate={!active && loop ? { opacity: [1, 0.55, 1] } : { opacity: 1 }}
+            transition={
+              !active && loop ? { duration: 1.5, repeat: Infinity, ease: "easeInOut" } : undefined
+            }
           >
             {active ? "Signed" : "Chasing signature"}
           </motion.span>
@@ -777,16 +872,17 @@ function DisclosureChasing({ hovered }: { hovered: boolean }) {
           <span className={styles.userRole}>Reminder sent</span>
           <span className={styles.kvValue}>E-sign link</span>
         </div>
+        <Progress pct={active ? 100 : 62} working={!active} />
       </div>
     </Illustration>
   );
 }
 
 /* ============================================================
-   15 — Loss mitigation outreach
+   15 - Loss mitigation outreach
    ============================================================ */
-function LossMitigation({ hovered }: { hovered: boolean }) {
-  const { ref, active, loop } = useMockupMotion(hovered);
+function LossMitigation({ hovered, index }: IlloProps) {
+  const { ref, active, loop } = useMockupMotion(hovered, index);
   const steps = ["Forbearance", "Repayment", "Modification"];
   return (
     <Illustration rootRef={ref}>
@@ -797,9 +893,13 @@ function LossMitigation({ hovered }: { hovered: boolean }) {
             <span className={styles.userRole}>Hardship outreach</span>
           </div>
           <motion.span
-            className={[styles.acctBadge, active ? styles.acctBadgeOk : styles.acctBadgeWarn].join(" ")}
-            animate={!active && loop ? { opacity: [1, 0.55, 1] } : {}}
-            transition={!active && loop ? { duration: 1.5, repeat: Infinity, ease: "easeInOut" } : undefined}
+            className={[styles.acctBadge, active ? styles.acctBadgeOk : styles.acctBadgeWarn].join(
+              " "
+            )}
+            animate={!active && loop ? { opacity: [1, 0.55, 1] } : { opacity: 1 }}
+            transition={
+              !active && loop ? { duration: 1.5, repeat: Infinity, ease: "easeInOut" } : undefined
+            }
           >
             {active ? "Routed to team" : "At risk"}
           </motion.span>
@@ -828,7 +928,7 @@ function LossMitigation({ hovered }: { hovered: boolean }) {
 /* ============================================================
    Registry
    ============================================================ */
-const ILLUSTRATIONS: Record<string, React.FC<{ hovered: boolean }>> = {
+const ILLUSTRATIONS: Record<string, React.FC<IlloProps>> = {
   inbound: Inbound,
   outbound: Outbound,
   documents: Documents,
@@ -846,8 +946,16 @@ const ILLUSTRATIONS: Record<string, React.FC<{ hovered: boolean }>> = {
   lossmit: LossMitigation,
 };
 
-export function Mockup({ id, hovered }: { id: string; hovered: boolean }) {
+export function Mockup({
+  id,
+  hovered,
+  index = 0,
+}: {
+  id: string;
+  hovered: boolean;
+  index?: number;
+}) {
   const Illo = ILLUSTRATIONS[id];
   if (!Illo) return null;
-  return <Illo hovered={hovered} />;
+  return <Illo hovered={hovered} index={index} />;
 }

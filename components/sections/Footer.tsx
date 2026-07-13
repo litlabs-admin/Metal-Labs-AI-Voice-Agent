@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 
-// §13 — dark footer with brand block, 5 link columns, and a giant clipped
+// §13 - dark footer with brand block, 5 link columns, and a giant clipped
 // "metal labs" watermark. Ported from the reference footer (framer-motion
 // entrance) into this project's Tailwind v4 conventions.
 

@@ -5,7 +5,7 @@ import type { MotionValue } from "framer-motion";
 import { useRef } from "react";
 import { cn } from "@/lib/cn";
 
-// Scroll-linked, word-by-word heading reveal — a port of the reference template's
+// Scroll-linked, word-by-word heading reveal - a port of the reference template's
 // `WordColorScroll` code component.
 //
 // Each word is rendered twice, stacked: a muted base copy and an absolutely

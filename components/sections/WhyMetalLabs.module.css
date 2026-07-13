@@ -1,6 +1,6 @@
-/* §8 — "Built for Mortgage". Sizing is the reference template's Industry section, verbatim.
+/* §8 - "Built for Mortgage". Sizing is the reference template's Industry section, verbatim.
    Kept in a module rather than Tailwind variants because the reference switches at 1440px, and
-   Tailwind v4 sorts a custom/arbitrary 1440 variant *before* `md:` — so `md:` would win on any
+   Tailwind v4 sorts a custom/arbitrary 1440 variant *before* `md:` - so `md:` would win on any
    property they share (grid columns, font sizes, padding, gap). Explicit media queries here make
    the cascade unambiguous. Mobile-first: base = reference phone, 768 = tablet, 1440 = desktop. */
 

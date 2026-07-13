@@ -1,4 +1,4 @@
-// Shared Framer Motion variants — single place to tune all reveal/stagger/hover timing.
+// Shared Framer Motion variants - single place to tune all reveal/stagger/hover timing.
 // Easings/durations mirror the Vapi reference tokens (DESIGN_AUDIT.md §6).
 import type { Variants, Transition } from "framer-motion";
 

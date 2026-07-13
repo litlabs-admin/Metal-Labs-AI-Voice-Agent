@@ -1,6 +1,6 @@
 import { cn } from "@/lib/cn";
 
-// Inter (illustration face), 10px, uppercase, tracked — eyebrow/label style.
+// Inter (illustration face), 10px, uppercase, tracked - eyebrow/label style.
 export function Eyebrow({
   children,
   className,

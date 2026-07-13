@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* =========================================================================
-   Metal Labs design tokens — extracted verbatim from the Vapi.ai reference.
+   Metal Labs design tokens - extracted verbatim from the Vapi.ai reference.
    See DESIGN_AUDIT.md. No magic numbers live in components; everything traces
    back to a token here (Tailwind v4 @theme generates the utility classes).
    ========================================================================= */
@@ -33,7 +33,7 @@
   /* Nav */
   --color-nav-cta: #e8e6e3;
 
-  /* Typography scale — line-heights & tracking retuned for Merriweather (a light
+  /* Typography scale - line-heights & tracking retuned for Merriweather (a light
      serif needs more leading and looser letter-spacing than the old display sans). */
   --text-display-2xl: 80px;
   --text-display-2xl--line-height: 1.1;
@@ -98,7 +98,7 @@ body {
   font-weight: 400;
 }
 
-/* Type roles — every element inherits body (Cabin 400) unless it opts in below. */
+/* Type roles - every element inherits body (Cabin 400) unless it opts in below. */
 h1,
 h2,
 h3,
@@ -170,6 +170,16 @@ button {
 }
 .animate-ml-marquee {
   animation: ml-marquee var(--marquee-duration, 40s) linear infinite;
+}
+/* Same loop for a gap-separated track: half the track plus half a gap lands the copy
+   exactly where the original started. Never pauses - no hover state touches it. */
+@keyframes ml-marquee-half {
+  to {
+    transform: translateX(calc(-50% - var(--gap, 0px) / 2));
+  }
+}
+.animate-ml-marquee-half {
+  animation: ml-marquee-half var(--marquee-duration, 40s) linear infinite;
 }
 .marquee-mask {
   -webkit-mask-image: linear-gradient(90deg, #0000, #000 4%, #000 96%, #0000 100%);

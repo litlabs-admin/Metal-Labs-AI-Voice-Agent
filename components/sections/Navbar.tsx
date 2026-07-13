@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { nav } from "@/lib/content";
 import { Button } from "@/components/ui/Button";
-import { LogoMark } from "@/components/ui/Icons";
 import { cn } from "@/lib/cn";
 
 // §2 - sticky nav: transparent over the dark hero, solid + blurred once scrolled.
@@ -28,9 +28,16 @@ export function Navbar() {
         )}
       >
         <div className="mx-auto flex h-16 max-w-[var(--container-site)] items-center justify-between px-6 md:px-14 xl:px-18">
-          <a href="#" className="flex items-center gap-2 text-white">
-            <LogoMark className="h-5 w-6" />
-            <span className="text-[17px] font-semibold tracking-tight">
+          <a href="#" className="flex items-center gap-3 text-white">
+            <Image
+              src="/brand/logo.png"
+              alt=""
+              width={28}
+              height={28}
+              priority
+              className="h-7 w-7 shrink-0 rounded-full object-cover"
+            />
+            <span className="font-heading text-[18px] font-bold leading-none tracking-[0.02em]">
               Metal Labs
             </span>
           </a>
@@ -47,7 +54,9 @@ export function Navbar() {
             ))}
           </div>
 
-          <Button variant="light">{nav.cta}</Button>
+          <a href="#about" className="shrink-0">
+            <Button variant="light">{nav.cta}</Button>
+          </a>
         </div>
       </nav>
     </header>

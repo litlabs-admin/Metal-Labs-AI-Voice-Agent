@@ -138,49 +138,6 @@
   line-height: 26px;
 }
 
-/* Decorative corner ticks straddling the section's bottom edge (the reference's "Box Bar"s).
-   The reference also renders dashed vertical rails here, but ships them at opacity:0 - so they
-   are intentionally not reproduced. */
-.rails {
-  position: absolute;
-  top: 0;
-  left: calc(50% - min(1390px, 100%) / 2);
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  max-width: 1390px;
-  height: 100%;
-  pointer-events: none;
-}
-
-.tick {
-  position: absolute;
-  top: -5px;
-  bottom: -5px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  width: min-content;
-  overflow: clip;
-}
-
-.tickStart {
-  left: 5px;
-}
-
-.tickEnd {
-  right: 5px;
-}
-
-.tickBox {
-  flex: none;
-  width: 12px;
-  height: 12px;
-}
-
 @media (min-width: 768px) {
   .section {
     padding: 100px 30px;
@@ -207,12 +164,6 @@
   }
   .cardTitle {
     font-size: 22px;
-  }
-  .tickStart {
-    left: 10px;
-  }
-  .tickEnd {
-    right: 10px;
   }
 }
 

@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Hides the dev-only Next.js route indicator badge that overlaps the hero copy.
+  devIndicators: false,
 };
 
 export default nextConfig;

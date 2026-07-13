@@ -8,22 +8,15 @@ import { motion } from "framer-motion";
 // entrance) into this project's Tailwind v4 conventions.
 
 const PRODUCT_LINKS = [
-  { label: "Platform", href: "#product" },
+  { label: "Omnichannel", href: "#omnichannel" },
   { label: "Solutions", href: "#solutions" },
   { label: "Use Cases", href: "#use-cases" },
-  { label: "Omnichannel", href: "#omnichannel" },
+  { label: "Compliance", href: "#compliance" },
 ];
 
-const COMPANY_LINKS = [
-  { label: "About Us", href: "#about" },
-  { label: "Request Demo", href: "#about" },
-];
+const COMPANY_LINKS = [{ label: "Request Demo", href: "#about" }];
 
-const SOCIAL_LINKS = [
-  { label: "LinkedIn", href: "#" },
-  { label: "X (Twitter)", href: "#" },
-  { label: "Instagram", href: "#" },
-];
+const SOCIAL_LINKS = [{ label: "LinkedIn", href: "#" }];
 
 const LEGAL_LINKS = [
   { label: "Privacy Policy", href: "#" },
@@ -68,11 +61,11 @@ export function Footer() {
         <div className="grid grid-cols-1 items-start gap-12 xl:grid-cols-[minmax(280px,1.3fr)_3fr] xl:gap-16">
           {/* Brand block */}
           <motion.div className="flex flex-col items-start gap-5" variants={itemVariants}>
-            <a href="#" className="inline-flex items-center gap-2.5 no-underline" aria-label="Metal Labs home">
+            <a href="#" className="inline-flex items-center gap-3 no-underline" aria-label="Metal Labs home">
               <span className="inline-flex h-7 w-7 shrink-0 overflow-hidden rounded-full">
-                <Image src="/brand/sphere.webp" alt="" width={28} height={28} className="h-full w-full object-cover" />
+                <Image src="/brand/logo.png" alt="" width={28} height={28} className="h-full w-full object-cover" />
               </span>
-              <span className="font-[family-name:var(--font-switzer)] text-[22px] font-bold tracking-[-0.5px] text-white">
+              <span className="font-heading text-[22px] font-bold leading-none tracking-[0.02em] text-white">
                 Metal Labs
               </span>
             </a>

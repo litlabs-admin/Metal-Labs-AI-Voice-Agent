@@ -1,4 +1,3 @@
-import { AnnouncementBar } from "@/components/sections/AnnouncementBar";
 import { Navbar } from "@/components/sections/Navbar";
 import { Hero } from "@/components/sections/Hero";
 import { Solutions } from "@/components/sections/Solutions";
@@ -12,7 +11,6 @@ import { Footer } from "@/components/sections/Footer";
 export default function Home() {
   return (
     <main className="flex w-full flex-col">
-      {/* 1 */ <AnnouncementBar />}
       {/* 2 */ <Navbar />}
       {/* 3 */ <Hero />}
       {/* 4 */ <Omnichannel />}

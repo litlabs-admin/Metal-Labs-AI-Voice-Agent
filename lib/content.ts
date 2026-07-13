@@ -15,10 +15,10 @@ export const announcement = {
 // §2 - Navigation
 export const nav = {
   links: [
+    { label: "Omnichannel", href: "#omnichannel" },
     { label: "Solutions", href: "#solutions" },
-    { label: "Product", href: "#product" },
     { label: "Use Cases", href: "#use-cases" },
-    { label: "About", href: "#about" },
+    { label: "Compliance", href: "#compliance" },
   ],
   cta: "Book a Demo",
 } as const;

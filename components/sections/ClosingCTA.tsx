@@ -11,10 +11,9 @@ export function ClosingCTA() {
       data-nav-theme="dark"
       className="relative w-full overflow-hidden bg-black text-white"
     >
-      {/* static green texture (reference: /airfoil/green-texture.jpg) */}
       <div
         className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${assets.hero.greenTexture})` }}
+        style={{ backgroundImage: `url(${assets.hero.ctaTexture})` }}
       />
       <div className="absolute inset-0 bg-black/32" />
 

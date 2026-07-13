@@ -69,16 +69,6 @@ export function Compliance() {
           ))}
         </RevealGroup>
       </div>
-
-      {/* Decorative corner ticks straddling the section's bottom edge. */}
-      <div aria-hidden className={styles.rails}>
-        <span className={`${styles.tick} ${styles.tickStart}`}>
-          <span className={`${styles.tickBox} border border-black/10 bg-white`} />
-        </span>
-        <span className={`${styles.tick} ${styles.tickEnd}`}>
-          <span className={`${styles.tickBox} border border-black/10 bg-white`} />
-        </span>
-      </div>
     </section>
   );
 }

@@ -9,7 +9,7 @@ export function Hero() {
   return (
     <section
       data-nav-theme="dark"
-      className="relative flex h-[calc(100svh-2.25rem)] w-full items-end overflow-hidden bg-ink text-white"
+      className="relative flex h-svh w-full items-end overflow-hidden bg-ink text-white"
     >
       <HeroGradientCanvas />
 
@@ -17,31 +17,23 @@ export function Hero() {
           bottom-left corner rather than aligning to the centered grid. */}
       {/* Two columns sharing one baseline: headline hugs the bottom-left corner,
           sub-copy + CTAs sit bottom-right, mirroring the reference composition. */}
-      <div className="relative z-10 flex w-full flex-col gap-10 px-6 pt-24 pb-8 md:flex-row md:items-end md:justify-between md:gap-16 md:px-10 md:pb-10">
-        <div className="max-w-180">
+      <div className="relative z-10 flex w-full flex-col gap-10 px-6 pt-24 pb-14 md:flex-row md:items-end md:justify-between md:gap-16 md:px-10 md:pb-20 xl:pb-24">
+        <div className="max-w-200">
           <Reveal
             as="h1"
-            className="text-balance font-heading text-display-sm font-light md:text-headline-xs xl:text-headline-sm"
+            className="text-balance font-heading text-headline-xs font-light md:text-headline-sm xl:text-headline-md"
           >
             {hero.headline[0]}
             <br />
             {hero.headline[1]}
           </Reveal>
-
-          <Reveal
-            as="p"
-            delay={0.12}
-            className="mt-7 font-illustration text-[12px] uppercase tracking-wide text-white/50"
-          >
-            {hero.caption}
-          </Reveal>
         </div>
 
         <Reveal
           delay={0.08}
-          className="flex shrink-0 flex-col items-start gap-6 md:max-w-md md:items-end md:pb-1 md:text-right"
+          className="flex shrink-0 flex-col items-start gap-7 md:max-w-lg md:items-end md:pb-1 md:text-right"
         >
-          <p className="text-pretty text-base font-light leading-snug text-white/85 md:text-lg">
+          <p className="text-pretty text-lg font-light leading-snug text-white/85 md:text-xl">
             {hero.subhead}
           </p>
           <HeroActions />

@@ -7,7 +7,7 @@ export const assets = {
     videoWebm: "/design/hero/metal-labs-hero.webm",
     videoMp4: "/design/hero/metal-labs-hero.mp4",
     poster: "/design/hero/metal-labs-hero-poster.jpg",
-    greenTexture: "/design/hero/green-texture.jpg", // closing CTA band
+    ctaTexture: "/design/hero/cta-bg.jpeg", // closing CTA band
   },
 
   // Product "screenshots". TODO: replace with Metal Labs screenshots.

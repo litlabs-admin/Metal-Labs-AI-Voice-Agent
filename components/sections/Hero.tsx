@@ -9,7 +9,7 @@ export function Hero() {
   return (
     <section
       data-nav-theme="dark"
-      className="relative flex min-h-[720px] w-full items-center overflow-hidden bg-ink text-white xl:min-h-[88vh]"
+      className="relative flex min-h-[calc(100svh-2.25rem)] w-full items-center overflow-hidden bg-ink text-white"
     >
       <HeroGradientCanvas />
 

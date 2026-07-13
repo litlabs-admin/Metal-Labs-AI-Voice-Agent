@@ -4,9 +4,9 @@
 
 export const assets = {
   hero: {
-    videoA: "/design/hero/hero-a.webm", // pre-call loop
-    videoB: "/design/hero/hero-b.webm", // in-call loop
-    poster: "/design/hero/hero-a-poster.jpg",
+    videoWebm: "/design/hero/metal-labs-hero.webm",
+    videoMp4: "/design/hero/metal-labs-hero.mp4",
+    poster: "/design/hero/metal-labs-hero-poster.jpg",
     greenTexture: "/design/hero/green-texture.jpg", // closing CTA band
   },
 

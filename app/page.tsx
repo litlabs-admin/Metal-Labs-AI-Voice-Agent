@@ -1,7 +1,7 @@
 import { Navbar } from "@/components/sections/Navbar";
 import { Hero } from "@/components/sections/Hero";
 import { Solutions } from "@/components/sections/Solutions";
-import { IntegrationsGrid } from "@/components/sections/IntegrationsGrid";
+import { IntegrationsStrip } from "@/components/sections/IntegrationsStrip";
 import { Omnichannel } from "@/components/sections/Omnichannel";
 import { WhyMetalLabs } from "@/components/sections/WhyMetalLabs";
 import { Compliance } from "@/components/sections/Compliance";
@@ -15,7 +15,7 @@ export default function Home() {
       {/* 3 */ <Hero />}
       {/* 4 */ <Omnichannel />}
       {/* 7 */ <Solutions />}
-      {/* 8 */ <IntegrationsGrid />}
+      {/* 8 */ <IntegrationsStrip />}
       {/* 9 */ <WhyMetalLabs />}
       {/* 12b */ <Compliance />}
       {/* 13 */ <ClosingCTA />}

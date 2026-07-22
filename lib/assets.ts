@@ -82,7 +82,7 @@ export const assets = {
 
 /**
  * One integration mark. `w`/`h` are the file's TRUE intrinsic pixel dimensions - they
- * drive both the optical-sizing math in IntegrationsGrid and the width/height attributes
+ * drive both the optical-sizing math in IntegrationMarquee and the width/height attributes
  * that reserve layout box (no CLS). Read them off the file; never guess.
  */
 export type IntegrationLogo = {

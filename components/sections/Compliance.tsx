@@ -1,6 +1,7 @@
 import { compliance } from "@/lib/content";
 import { assets } from "@/lib/assets";
-import { Reveal, RevealGroup, RevealItem } from "@/components/ui/Reveal";
+import { RevealGroup, RevealItem } from "@/components/ui/Reveal";
+import { WordRevealGroup, Words } from "@/components/ui/WordReveal";
 import styles from "./Compliance.module.css";
 
 // §12b - "Compliance": the reference template's two-column security section. Left column holds
@@ -16,16 +17,18 @@ export function Compliance() {
       className={`${styles.section} w-full bg-white`}
     >
       <div className={styles.inner}>
-        <Reveal className={styles.left}>
-          <div className={styles.titleBlock}>
+        <div className={styles.left}>
+          <WordRevealGroup className={styles.titleBlock}>
             <span className="flex items-center">
               <span className="font-illustration text-[14px] font-medium uppercase leading-[16.5px] text-text">
                 {compliance.eyebrow}
               </span>
             </span>
 
-            <h2 className={`${styles.heading} font-light text-text`}>{compliance.headline}</h2>
-          </div>
+            <h2 className={`${styles.heading} font-light text-text`}>
+              <Words text={compliance.headline} />
+            </h2>
+          </WordRevealGroup>
 
           <RevealGroup className={styles.badges} stagger={0.09}>
             {compliance.badges.map((badge) => (
@@ -40,7 +43,7 @@ export function Compliance() {
               </RevealItem>
             ))}
           </RevealGroup>
-        </Reveal>
+        </div>
 
         <RevealGroup className={`${styles.cards} border-l border-t border-black/10`} stagger={0.07}>
           {compliance.cards.map((card, i) => (

@@ -71,12 +71,14 @@ export const integrations = {
   headline: ["Plugs into the stack", "you already run."],
   subhead:
     "Metal Labs reads and writes to your LOS, POS, CRM, and dialer in real time. No rip-and-replace, no data migration, no new system for your team to learn.",
+  // `short` is what renders in the dot-separated line above the logo strip; `label` is
+  // the full name, kept for the accessible description and any future per-category view.
   categories: [
-    { id: "los", label: "Loan origination" },
-    { id: "pos", label: "Point of sale" },
-    { id: "crm", label: "CRM & marketing" },
-    { id: "verification", label: "Verification & docs" },
-    { id: "dialers", label: "Dialers & telephony" },
+    { id: "los", short: "Loan origination", label: "Loan origination systems" },
+    { id: "pos", short: "Point of sale", label: "Point of sale" },
+    { id: "crm", short: "CRM", label: "CRM & marketing" },
+    { id: "verification", short: "Verification", label: "Verification & documents" },
+    { id: "dialers", short: "Dialers", label: "Dialers & telephony" },
   ],
 } as const;
 

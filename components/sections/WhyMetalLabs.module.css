@@ -5,7 +5,7 @@
    the cascade unambiguous. Mobile-first: base = reference phone, 768 = tablet, 1440 = desktop. */
 
 .section {
-  padding: 80px 20px;
+  padding: 48px 20px;
 }
 
 .inner {
@@ -90,7 +90,7 @@
 
 @media (min-width: 768px) {
   .section {
-    padding: 100px 30px;
+    padding: 60px 30px;
   }
   .inner {
     gap: 60px;
@@ -108,7 +108,7 @@
 
 @media (min-width: 1440px) {
   .section {
-    padding: 140px 30px;
+    padding: 80px 30px;
   }
   .inner {
     gap: 70px;

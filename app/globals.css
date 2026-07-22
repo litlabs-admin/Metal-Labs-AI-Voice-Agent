@@ -180,6 +180,17 @@ button {
   height: calc(var(--logo-h, 22) * var(--logo-scale, 1px));
 }
 
+/* Infinite marquee for the integration rows. Half the track plus half a gap lands the
+   duplicated copy exactly where the original started, so the seam is invisible. */
+@keyframes ml-marquee-half {
+  to {
+    transform: translateX(calc(-50% - var(--gap, 0px) / 2));
+  }
+}
+.animate-ml-marquee-half {
+  animation: ml-marquee-half var(--marquee-duration, 40s) linear infinite;
+}
+
 /* Respect reduced motion for all decorative animation */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -189,5 +200,13 @@ button {
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
+  }
+
+  /* The blanket clamp above would run the marquee to completion in 0.001ms, i.e. SNAP
+     the row to its end offset (-50%) rather than stop it. Kill the animation outright so
+     the row simply renders static and untranslated. */
+  .animate-ml-marquee-half {
+    animation: none !important;
+    transform: none !important;
   }
 }

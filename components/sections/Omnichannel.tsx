@@ -15,7 +15,7 @@ export function Omnichannel() {
     <section
       id="omnichannel"
       data-nav-theme="light"
-      className="w-full bg-white px-5 py-20 md:px-[30px] md:py-[100px] xl:py-[140px]"
+      className="w-full bg-white px-5 pt-20 pb-12 md:px-[30px] md:pt-[100px] md:pb-14 xl:pt-[140px] xl:pb-20"
     >
       <div className="mx-auto flex w-full max-w-[var(--container-site)] flex-col items-center gap-10 md:gap-[60px] xl:gap-20">
         {/* Title block - 828px cap, 20px rhythm, centred (matches the reference) */}

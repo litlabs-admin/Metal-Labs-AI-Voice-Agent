@@ -63,15 +63,25 @@ export const feature = {
     "Not a generic AI. These are agents trained on how mortgage actually works. From the first lead call to compliant collections, every agent is built for the exact conversation it handles.",
 } as const;
 
-// §7 - Channels strip (dark)
-export const channels = {
-  eyebrow: "EVERY CHANNEL",
-  headline: ["Voice, text, and email", "connected by design."],
+// §7 - Integrations grid (dark). Category order here IS the render order.
+// Category labels are copy and live here; the marks themselves are asset metadata
+// in lib/assets.ts. The two halves join by `id`, not by array index.
+export const integrations = {
+  eyebrow: "INTEGRATIONS",
+  headline: ["Plugs into the stack", "you already run."],
+  subhead:
+    "Metal Labs reads and writes to your LOS, POS, CRM, and dialer in real time. No rip-and-replace, no data migration, no new system for your team to learn.",
+  categories: [
+    { id: "los", label: "Loan origination" },
+    { id: "pos", label: "Point of sale" },
+    { id: "crm", label: "CRM & marketing" },
+    { id: "verification", label: "Verification & docs" },
+    { id: "dialers", label: "Dialers & telephony" },
+  ],
 } as const;
 
 // §4 - Omnichannel (eyebrow + scroll-revealed headline + 3 hover cards)
 export const omnichannel = {
-  // Not "Every Channel". §7 ChannelsStrip already uses that label further down the page.
   eyebrow: "Omnichannel",
   headline: "One agent. Every channel. Full context, always.",
   subhead:

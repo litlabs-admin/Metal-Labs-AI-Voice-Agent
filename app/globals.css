@@ -158,32 +158,26 @@ button {
     opacity: 0;
   }
 }
-/* Infinite logo marquee */
-@keyframes ml-marquee {
-  to {
-    transform: translateX(calc(-50% - 0.5rem));
-  }
-}
-
 .animate-ml-spin {
   animation: ml-spin 1s linear infinite;
 }
-.animate-ml-marquee {
-  animation: ml-marquee var(--marquee-duration, 40s) linear infinite;
-}
-/* Same loop for a gap-separated track: half the track plus half a gap lands the copy
-   exactly where the original started. Never pauses - no hover state touches it. */
-@keyframes ml-marquee-half {
-  to {
-    transform: translateX(calc(-50% - var(--gap, 0px) / 2));
-  }
-}
-.animate-ml-marquee-half {
-  animation: ml-marquee-half var(--marquee-duration, 40s) linear infinite;
-}
-.marquee-mask {
-  -webkit-mask-image: linear-gradient(90deg, #0000, #000 4%, #000 96%, #0000 100%);
-  mask-image: linear-gradient(90deg, #0000, #000 4%, #000 96%, #0000 100%);
+
+/* =========================================================================
+   §7 Integrations grid - optical logo sizing
+   -------------------------------------------------------------------------
+   The marks are wordmarks spanning a 1:1 (ICE) to 7.6:1 (The Work Number)
+   aspect range. Capping height alone would render the widest mark ~7.6x wider
+   than the narrowest; capping width alone inverts the problem. Neither reads
+   as "uniform".
+
+   Instead each mark gets a height that holds its INK AREA roughly constant
+   (h = sqrt(AREA / aspect), clamped), computed per logo in IntegrationsGrid
+   and passed down as the unitless --logo-h. The breakpoint-varying part is a
+   single length multiplier, --logo-scale, set once on the grid - so scaling
+   the whole wall is one number per breakpoint, not 25.
+   ========================================================================= */
+.integration-mark {
+  height: calc(var(--logo-h, 22) * var(--logo-scale, 1px));
 }
 
 /* Respect reduced motion for all decorative animation */

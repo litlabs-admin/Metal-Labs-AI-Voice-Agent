@@ -37,11 +37,10 @@ const assets = {
   "hero/green-texture.jpg": NEXTIMG("/airfoil/green-texture.jpg", 1920),
 };
 
-// Integration logos (§7): top-row 0..12, bottom-row 0..17
-for (let i = 0; i <= 12; i++)
-  assets[`integrations/top-${i}.png`] = NEXTIMG(`/integrations/top-row/top-row/${i}/image.png`, 128);
-for (let i = 0; i <= 17; i++)
-  assets[`integrations/bottom-${i}.png`] = NEXTIMG(`/integrations/bottom-row/bottom-row/${i}/image.png`, 128);
+// NOTE: §7 no longer fetches reference integration logos. The integrations grid ships
+// real partner marks committed under public/design/integrations/<category>/ - see
+// lib/assets.ts. Do not re-add a fetch loop here; those marks are licensed assets that
+// must come from each vendor's own brand page, not a scrape.
 
 async function exists(p) {
   try { await access(p); return true; } catch { return false; }

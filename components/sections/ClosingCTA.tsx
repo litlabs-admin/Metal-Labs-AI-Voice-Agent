@@ -1,4 +1,4 @@
-import { closing } from "@/lib/content";
+import { closing, CAL_LINK } from "@/lib/content";
 import { assets } from "@/lib/assets";
 import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
@@ -26,7 +26,9 @@ export function ClosingCTA() {
         </p>
         <div className="mt-2 flex flex-wrap items-center justify-center gap-4">
           {/* Plain white button (Vapi "Contact Sales") */}
-          <Button variant="light">{closing.buttons[0]}</Button>
+          <a href={CAL_LINK} target="_blank" rel="noopener noreferrer">
+            <Button variant="light">{closing.buttons[0]}</Button>
+          </a>
 
           {/* Dark button with a thin static border */}
           <button

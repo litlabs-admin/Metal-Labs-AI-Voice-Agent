@@ -6,6 +6,9 @@ export const brand = {
   tagline: "Every borrower conversation. Fully handled.",
 } as const;
 
+// Cal.com scheduling link for all "Book a Demo" CTAs.
+export const CAL_LINK = "https://cal.com/vandan-metallabs/30min";
+
 // §1 - Top announcement bar
 export const announcement = {
   text: "Metal Labs handles every borrower conversation, from first lead call to final payment.",

@@ -16,7 +16,7 @@ const PRODUCT_LINKS = [
 
 const COMPANY_LINKS = [{ label: "Request Demo", href: "#about" }];
 
-const SOCIAL_LINKS = [{ label: "LinkedIn", href: "#" }];
+const SOCIAL_LINKS = [{ label: "LinkedIn", href: "https://www.linkedin.com/company/metal-labs-ai/" }];
 
 const LEGAL_LINKS = [
   { label: "Privacy Policy", href: "#" },

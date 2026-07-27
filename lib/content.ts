@@ -9,6 +9,13 @@ export const brand = {
 // Cal.com scheduling link for all "Book a Demo" CTAs.
 export const CAL_LINK = "https://cal.com/vandan-metallabs/30min";
 
+// Canonical origin, used as metadataBase so relative canonical/OG URLs resolve
+// to absolute ones. NEXT_PUBLIC_ because it is a public URL, not a secret.
+// Trailing slashes are stripped so `${SITE_URL}/blog/x` can never double up.
+export const SITE_URL = (
+  process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
+).replace(/\/+$/, "");
+
 // §1 - Top announcement bar
 export const announcement = {
   text: "Metal Labs handles every borrower conversation, from first lead call to final payment.",
@@ -16,14 +23,44 @@ export const announcement = {
 } as const;
 
 // §2 - Navigation
+// Hrefs are root-relative ("/#x", not "#x") so they resolve to the homepage
+// section from any route. A bare "#x" resolves against the CURRENT path, so
+// from /blog/a-post it would point at /blog/a-post#omnichannel and go nowhere.
+// On the homepage these still behave as same-document fragment links, so the
+// smooth scroll from globals.css is unaffected.
 export const nav = {
   links: [
-    { label: "Omnichannel", href: "#omnichannel" },
-    { label: "Solutions", href: "#solutions" },
-    { label: "Use Cases", href: "#use-cases" },
-    { label: "Compliance", href: "#compliance" },
+    { label: "Omnichannel", href: "/#omnichannel" },
+    { label: "Solutions", href: "/#solutions" },
+    { label: "Use Cases", href: "/#use-cases" },
+    { label: "Compliance", href: "/#compliance" },
+    { label: "Blog", href: "/blog" },
   ],
   cta: "Book a Demo",
+} as const;
+
+// §15 - Blog (content itself comes from Airtable; this is only the page chrome)
+export const blog = {
+  eyebrow: "Blog",
+  // Only rendered when Airtable returns nothing - the listing's <h1> is
+  // normally the featured post's own title.
+  title: "Insights on AI for mortgage lending.",
+  allTitle: "All Posts",
+  allSubtitle: "Stories, announcements, and product updates.",
+  /** Leading chip in the category filter row; shows every post. */
+  filterAll: "All",
+  morePostsTitle: "More Posts",
+  viewAllLabel: "All posts",
+  metaTitle: "Blog | Metal Labs",
+  metaDescription:
+    "Product news, industry insight, and compliance guidance on AI voice agents for mortgage lending, from the Metal Labs team.",
+  emptyTitle: "No articles published yet.",
+  emptyBody: "We're working on the first one. Check back shortly.",
+  notFoundTitle: "We couldn't find that article.",
+  notFoundBody: "It may have been unpublished or the link may be out of date.",
+  errorTitle: "This page didn't load.",
+  errorBody:
+    "We couldn't reach the content service. This is usually temporary - try again in a moment.",
 } as const;
 
 // §3 - Hero

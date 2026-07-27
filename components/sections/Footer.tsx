@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { CAL_LINK } from "@/lib/content";
 
@@ -8,14 +9,21 @@ import { CAL_LINK } from "@/lib/content";
 // "metal labs" watermark. Ported from the reference footer (framer-motion
 // entrance) into this project's Tailwind v4 conventions.
 
+// Root-relative ("/#x") rather than bare ("#x") so these resolve to the
+// homepage section from /blog routes too - a bare fragment resolves against
+// whatever path the footer happens to be rendered on. On the homepage they
+// remain same-document fragment links, so smooth scrolling is unchanged.
 const PRODUCT_LINKS = [
-  { label: "Omnichannel", href: "#omnichannel" },
-  { label: "Solutions", href: "#solutions" },
-  { label: "Use Cases", href: "#use-cases" },
-  { label: "Compliance", href: "#compliance" },
+  { label: "Omnichannel", href: "/#omnichannel" },
+  { label: "Solutions", href: "/#solutions" },
+  { label: "Use Cases", href: "/#use-cases" },
+  { label: "Compliance", href: "/#compliance" },
 ];
 
-const COMPANY_LINKS = [{ label: "Request Demo", href: "#about" }];
+const COMPANY_LINKS = [
+  { label: "Blog", href: "/blog" },
+  { label: "Request Demo", href: "/#about" },
+];
 
 const SOCIAL_LINKS = [{ label: "LinkedIn", href: "https://www.linkedin.com/company/metal-labs-ai/" }];
 
@@ -62,14 +70,14 @@ export function Footer() {
         <div className="grid grid-cols-1 items-start gap-12 xl:grid-cols-[minmax(280px,1.3fr)_3fr] xl:gap-16">
           {/* Brand block */}
           <motion.div className="flex flex-col items-start gap-5" variants={itemVariants}>
-            <a href="#" className="inline-flex items-center gap-3 no-underline" aria-label="Metal Labs home">
+            <Link href="/" className="inline-flex items-center gap-3 no-underline" aria-label="Metal Labs home">
               <span className="inline-flex h-7 w-7 shrink-0 overflow-hidden rounded-full">
                 <Image src="/brand/logo.png" alt="" width={28} height={28} className="h-full w-full object-cover" />
               </span>
               <span className="font-heading text-[22px] font-bold leading-none tracking-[0.02em] text-white">
                 Metal Labs
               </span>
-            </a>
+            </Link>
 
             <p className="max-w-[260px] font-[family-name:var(--font-inter)] text-[15px] leading-[1.5] text-white/55">
               Every borrower conversation, handled across voice, text, and email.

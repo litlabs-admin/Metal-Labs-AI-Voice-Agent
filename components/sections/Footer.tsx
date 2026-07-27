@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { CAL_LINK } from "@/lib/content";
 
 // §13 - dark footer with brand block, 5 link columns, and a giant clipped
 // "metal labs" watermark. Ported from the reference footer (framer-motion
@@ -75,7 +76,9 @@ export function Footer() {
             </p>
 
             <a
-              href="#about"
+              href={CAL_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
               className="mt-1 inline-flex w-fit items-center justify-center rounded-full bg-white px-6 py-[13px] font-[family-name:var(--font-switzer)] text-[14px] font-medium leading-none text-black transition-[transform,opacity] duration-200 hover:-translate-y-px hover:opacity-[0.88]"
             >
               Book a Demo

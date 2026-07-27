@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { nav } from "@/lib/content";
+import { nav, CAL_LINK } from "@/lib/content";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/cn";
 
@@ -54,7 +54,12 @@ export function Navbar() {
             ))}
           </div>
 
-          <a href="#about" className="shrink-0">
+          <a
+            href={CAL_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="shrink-0"
+          >
             <Button variant="light">{nav.cta}</Button>
           </a>
         </div>

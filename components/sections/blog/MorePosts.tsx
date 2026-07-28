@@ -9,7 +9,7 @@ export function MorePosts({ posts }: { posts: BlogPost[] }) {
   if (posts.length === 0) return null;
 
   return (
-    <section data-nav-theme="light" className="w-full border-t border-hairline bg-cream px-6 py-16 md:px-14 xl:px-18">
+    <section data-nav-theme="light" className="w-full border-t border-hairline bg-white px-6 py-16 md:px-14 xl:px-18">
       <div className="mx-auto flex w-full max-w-[var(--container-site)] flex-col gap-10">
         <div className="flex items-center justify-between gap-4">
           <h2 className="font-heading text-[28px] font-light text-text md:text-[32px]">

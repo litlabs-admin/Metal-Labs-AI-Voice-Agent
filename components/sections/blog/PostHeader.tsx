@@ -8,7 +8,7 @@ import { formatPostDate, type BlogPost } from "@/lib/blog";
 export function PostHeader({ post }: { post: BlogPost }) {
   return (
     <>
-      <section data-nav-theme="light" className="w-full bg-cream px-6 pt-28 pb-10 text-center md:px-14 md:pt-32 xl:px-18">
+      <section data-nav-theme="light" className="w-full bg-white px-6 pt-28 pb-10 text-center md:px-14 md:pt-32 xl:px-18">
         <Reveal className="mx-auto flex w-full max-w-[820px] flex-col items-center gap-5">
           <p className="font-illustration text-[13px] text-muted">
             {post.author} · <time dateTime={post.publishedAt}>{formatPostDate(post.publishedAt)}</time> ·{" "}
@@ -21,7 +21,7 @@ export function PostHeader({ post }: { post: BlogPost }) {
         </Reveal>
       </section>
 
-      <div className="w-full bg-cream px-6 pt-6 md:px-14 xl:px-18">
+      <div className="w-full bg-white px-6 pt-6 md:px-14 xl:px-18">
         <div className="mx-auto w-full max-w-[1100px]">
           <div className="relative aspect-[16/9] w-full overflow-hidden rounded-media bg-cream-2">
             {post.cover ? (

@@ -11,7 +11,7 @@ import { blog } from "@/lib/content";
 // reference layout where the featured post itself opens the page.
 export function FeaturedPost({ post }: { post: BlogPost }) {
   return (
-    <section data-nav-theme="light" className="w-full bg-cream px-6 pt-28 pb-16 md:px-14 md:pt-32 xl:px-18">
+    <section data-nav-theme="light" className="w-full bg-white px-6 pt-28 pb-16 md:px-14 md:pt-32 xl:px-18">
       <Reveal className="mx-auto w-full max-w-[var(--container-site)]">
         <Eyebrow className="mb-6 block">{blog.eyebrow}</Eyebrow>
 

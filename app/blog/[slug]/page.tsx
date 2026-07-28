@@ -125,7 +125,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
       <PostHeader post={post} />
 
-      <div className="w-full bg-cream px-6 pb-20 md:px-14 xl:px-18">
+      <div className="w-full bg-white px-6 pb-20 md:px-14 xl:px-18">
         <div className="mx-auto w-full max-w-[720px] pt-14">
           <Markdown source={post.body} />
 

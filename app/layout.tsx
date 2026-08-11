@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { merriweather, cabin, inter, switzer } from "./fonts";
 import { SITE_URL } from "@/lib/content";
 import "./globals.css";
@@ -23,7 +24,10 @@ export default function RootLayout({
       lang="en"
       className={`${merriweather.variable} ${cabin.variable} ${inter.variable} ${switzer.variable} antialiased`}
     >
-      <body className="min-h-screen overflow-x-hidden bg-cream text-text">{children}</body>
+      <body className="min-h-screen overflow-x-hidden bg-cream text-text">
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }

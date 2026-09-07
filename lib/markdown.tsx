@@ -18,8 +18,9 @@ import { cn } from "@/lib/cn";
    markup or script.
 
    Supported: headings, paragraphs, ordered/unordered lists, blockquotes,
-   fenced code, horizontal rules, images, and inline bold/italic/code/links.
-   Not supported: tables, footnotes, nested lists, inline HTML.
+   fenced code, horizontal rules, images, GitHub-flavoured pipe tables, and
+   inline bold/italic/code/links.
+   Not supported: footnotes, nested lists, inline HTML.
    ========================================================================= */
 
 type Block =
@@ -29,7 +30,8 @@ type Block =
   | { kind: "quote"; text: string }
   | { kind: "code"; code: string }
   | { kind: "hr" }
-  | { kind: "image"; alt: string; src: string };
+  | { kind: "image"; alt: string; src: string }
+  | { kind: "table"; head: string[]; rows: string[][] };
 
 const RE_FENCE_OPEN = /^\s{0,3}```/;
 const RE_FENCE_CLOSE = /^\s{0,3}```\s*$/;
@@ -39,6 +41,20 @@ const RE_IMAGE = /^\s*!\[([^\]]*)\]\(([^)\s]+)(?:\s+"[^"]*")?\)\s*$/;
 const RE_QUOTE = /^\s{0,3}>/;
 const RE_BULLET = /^\s{0,3}[-*+]\s+(.*)$/;
 const RE_ORDERED = /^\s{0,3}\d+[.)]\s+(.*)$/;
+/** A table row: any line that both starts and ends with a pipe. */
+const RE_TABLE_ROW = /^\s{0,3}\|.*\|\s*$/;
+/** The delimiter row under a table header: |---|:--:| etc. */
+const RE_TABLE_DIVIDER = /^\s{0,3}\|(?:\s*:?-{1,}:?\s*\|)+\s*$/;
+
+/** Split one "| a | b |" line into its trimmed cells. */
+function parseTableRow(line: string): string[] {
+  return line
+    .trim()
+    .replace(/^\|/, "")
+    .replace(/\|$/, "")
+    .split("|")
+    .map((cell) => cell.trim());
+}
 
 /** True when a line opens a new block, so paragraph accumulation stops at it. */
 function startsBlock(line: string): boolean {
@@ -49,7 +65,8 @@ function startsBlock(line: string): boolean {
     RE_IMAGE.test(line) ||
     RE_QUOTE.test(line) ||
     RE_BULLET.test(line) ||
-    RE_ORDERED.test(line)
+    RE_ORDERED.test(line) ||
+    RE_TABLE_ROW.test(line)
   );
 }
 
@@ -66,9 +83,20 @@ function startsBlock(line: string): boolean {
  *
  * Trade-off: an author cannot force a literal "#" at the start of a line. Wrap
  * it in backticks if that is ever genuinely needed.
+ *
+ * The second pass collapses runs of three or more asterisks or underscores
+ * down to two. Pasting "**Bold**" into a rich-text cell makes Airtable apply
+ * real bold formatting AND keep the typed markers, so the value comes back as
+ * "****Bold****" - which the lazy inline matcher below reads as a bold span
+ * whose text is literally "**Bold". Collapsing here means those doubled
+ * markers, and "***bold italic***" (nested emphasis this grammar does not
+ * model), both degrade to plain bold instead of leaking asterisks onto the page.
  */
 function unescapeAirtableMarkdown(source: string): string {
-  return source.replace(/\\([!"#$%&'()*+,\-./:;<=>?@[\]^_`{|}~])/g, "$1");
+  return source
+    .replace(/\\([!"#$%&'()*+,\-./:;<=>?@[\]^_`{|}~])/g, "$1")
+    .replace(/\*{3,}/g, "**")
+    .replace(/_{3,}/g, "__");
 }
 
 function parseBlocks(source: string): Block[] {
@@ -131,6 +159,25 @@ function parseBlocks(source: string): Block[] {
         i += 1;
       }
       blocks.push({ kind: "quote", text: buffer.join(" ").trim() });
+      continue;
+    }
+
+    // Pipe table: a header row, a delimiter row, then zero or more body rows.
+    // Requiring the delimiter row keeps a stray "| " paragraph from becoming a
+    // table, and lets a non-table line fall through to the paragraph rule.
+    if (RE_TABLE_ROW.test(line) && RE_TABLE_DIVIDER.test(lines[i + 1] ?? "")) {
+      const head = parseTableRow(line);
+      i += 2; // header + delimiter
+      const rows: string[][] = [];
+      while (i < lines.length && RE_TABLE_ROW.test(lines[i])) {
+        const cells = parseTableRow(lines[i]);
+        // Pad or trim to the header width so every row renders the same shape.
+        rows.push(
+          Array.from({ length: head.length }, (_, index) => cells[index] ?? ""),
+        );
+        i += 1;
+      }
+      blocks.push({ kind: "table", head, rows });
       continue;
     }
 
@@ -315,6 +362,44 @@ function renderBlock(block: Block, index: number): ReactNode {
         >
           <code className="font-mono">{block.code}</code>
         </pre>
+      );
+
+    case "table":
+      // Wrapped in its own scroll container: the post column is 720px, and a
+      // comparison table with five columns will always be wider than that on
+      // a phone. The page itself must never scroll sideways.
+      return (
+        <div key={key} className="mt-8 -mx-6 overflow-x-auto px-6 md:mx-0 md:px-0">
+          <table className="w-full min-w-[560px] border-collapse text-left text-[15px] leading-[1.6]">
+            <thead>
+              <tr className="border-b border-text/20">
+                {block.head.map((cell, cellIndex) => (
+                  <th
+                    key={`${key}-h${cellIndex}`}
+                    scope="col"
+                    className="py-3 pr-5 align-bottom font-semibold text-text last:pr-0"
+                  >
+                    {renderInline(cell, `${key}-h${cellIndex}`)}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {block.rows.map((row, rowIndex) => (
+                <tr key={`${key}-r${rowIndex}`} className="border-b border-hairline">
+                  {row.map((cell, cellIndex) => (
+                    <td
+                      key={`${key}-r${rowIndex}c${cellIndex}`}
+                      className="py-3 pr-5 align-top text-text/85 last:pr-0"
+                    >
+                      {renderInline(cell, `${key}-r${rowIndex}c${cellIndex}`)}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       );
 
     case "hr":

@@ -138,6 +138,9 @@ function toPlainText(markdown: string): string {
     .replace(/^\s{0,3}>\s?/gm, "") // blockquotes
     .replace(/^\s{0,3}[-*+]\s+/gm, "") // bullets
     .replace(/^\s{0,3}\d+[.)]\s+/gm, "") // ordered items
+    .replace(/^\s{0,3}\|(?:\s*:?-{1,}:?\s*\|)+\s*$/gm, " ") // table delimiter rows
+    .replace(/^\s{0,3}\|(.*)\|\s*$/gm, "$1") // table rows -> their cell text
+    .replace(/\|/g, " ") // remaining cell separators
     .replace(/[*_`]/g, "") // inline emphasis markers
     .replace(/\s+/g, " ")
     .trim();

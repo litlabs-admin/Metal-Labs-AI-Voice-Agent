@@ -25,7 +25,9 @@ export function Navbar() {
   // defaulting to "dark" and correcting a frame later. /blog and its posts
   // open light; every other route (including /blog's own error/not-found,
   // which are dark) is corrected by the layout effect below.
-  const [topIsDark, setTopIsDark] = useState(() => !pathname.startsWith("/blog"));
+  const [topIsDark, setTopIsDark] = useState(
+    () => !pathname.startsWith("/blog") && pathname !== "/privacy",
+  );
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);

@@ -28,9 +28,7 @@ const COMPANY_LINKS = [
 const SOCIAL_LINKS = [{ label: "LinkedIn", href: "https://www.linkedin.com/company/metal-labs-ai/" }];
 
 const LEGAL_LINKS = [
-  { label: "Privacy Policy", href: "#" },
-  { label: "Terms of Service", href: "#" },
-  { label: "Legal", href: "#" },
+  { label: "Privacy Policy", href: "/privacy" },
 ];
 
 const COLUMNS = [

@@ -258,3 +258,128 @@ export const closing = {
 
 // §13 - Footer content is inlined in components/sections/Footer.tsx (ported
 // verbatim from the reference footer).
+
+// §16 - Privacy policy (/privacy). Plain facts only: this is a marketing site
+// with no cookies, forms, or accounts. Update this block (not the page) when
+// those facts change, e.g. if a contact form or tracking script is added.
+export const PRIVACY_EMAIL = "vandan@metallabs.io";
+
+export type PolicyBlock =
+  | { type: "p"; text: string }
+  | { type: "list"; items: string[] };
+
+export type PolicySection = {
+  id: string;
+  title: string;
+  blocks: PolicyBlock[];
+};
+
+export const privacy = {
+  eyebrow: "Legal",
+  title: "Privacy Policy",
+  intro: "How Metal Labs handles information when you visit our website or book a demo.",
+  metaDescription:
+    "How Metal Labs handles information on metallabs.io: no cookies, no forms, anonymous analytics, and demo bookings through Cal.com.",
+  updatedAt: "2026-09-16",
+  updatedLabel: "September 16, 2026",
+  sections: [
+    {
+      id: "overview",
+      title: "Overview",
+      blocks: [
+        {
+          type: "p",
+          text: "This policy covers metallabs.io, the Metal Labs marketing website. The site is informational: it has no accounts, sign-ups, or contact forms, and it does not ask you for personal information.",
+        },
+      ],
+    },
+    {
+      id: "what-we-collect",
+      title: "What We Collect",
+      blocks: [
+        { type: "p", text: "We collect very little, and only in these cases:" },
+        {
+          type: "list",
+          items: [
+            "Anonymous page-view statistics, described under Analytics below",
+            "The details you enter when you book a demo",
+            "Any email you choose to send us",
+          ],
+        },
+        {
+          type: "p",
+          text: "We do not use cookies, and we do not track your activity on other websites.",
+        },
+      ],
+    },
+    {
+      id: "analytics",
+      title: "Analytics",
+      blocks: [
+        {
+          type: "p",
+          text: "We use Vercel Analytics to understand which pages are visited and how the site performs. It reports aggregated, anonymous figures, does not use cookies, and does not identify individual visitors.",
+        },
+      ],
+    },
+    {
+      id: "booking-a-demo",
+      title: "Booking a Demo",
+      blocks: [
+        {
+          type: "p",
+          text: "The “Book a Demo” buttons take you to Cal.com, a scheduling service. The name, email address, and any notes you enter there are shared with us so we can prepare for and hold the meeting. Cal.com processes that booking under its own privacy policy.",
+        },
+        {
+          type: "p",
+          text: "Access to the Metal Labs platform is set up directly with customers after a demo. It is not available through this website.",
+        },
+      ],
+    },
+    {
+      id: "how-we-use-it",
+      title: "How We Use It",
+      blocks: [
+        { type: "p", text: "We use this information only to:" },
+        {
+          type: "list",
+          items: [
+            "Arrange and hold the demo you booked",
+            "Reply to messages you send us",
+            "Improve the content and performance of the website",
+          ],
+        },
+      ],
+    },
+    {
+      id: "no-selling-or-sharing",
+      title: "No Selling or Sharing",
+      blocks: [
+        {
+          type: "p",
+          text: "We do not sell your information, and we do not share it with third parties for advertising or marketing. We only disclose it where the law requires us to.",
+        },
+      ],
+    },
+    {
+      id: "your-choices",
+      title: "Retention and Your Choices",
+      blocks: [
+        {
+          type: "p",
+          text: "We keep booking details and emails only for as long as we need them to talk with you about Metal Labs. You can ask what we hold about you, or ask us to delete it, by emailing us. We will reply within 30 days.",
+        },
+      ],
+    },
+    {
+      id: "changes",
+      title: "Changes to This Policy",
+      blocks: [
+        {
+          type: "p",
+          text: "If this policy changes, we will update the date at the top of this page.",
+        },
+      ],
+    },
+  ] satisfies PolicySection[],
+};

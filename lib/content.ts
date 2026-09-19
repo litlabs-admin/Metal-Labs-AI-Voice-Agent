@@ -187,23 +187,37 @@ export const why = {
   ],
 } as const;
 
-// §12b - Compliance (two-column: title + certification badges | 3 hairline cards)
+// §12b - Compliance (two-column: title + badges | 3 hairline cards)
+//
+// Every claim here must match /trust, because a compliance reviewer reads
+// both. Four claims were removed on 19 Sep 2026 for being untrue:
+//
+//   - "SOC 2" / "HIPAA" badges: we hold neither. Our infrastructure providers
+//     hold SOC 2; we have no BAA and the platform is not built for PHI.
+//   - "Zero Data Retention - your data is never stored": we store transcripts,
+//     summaries and recordings for 90 days. This contradicted our own Trust
+//     Center outright.
+//   - "Private Deployment - deploy in your own VPC": not offered. The platform
+//     is a single multi-tenant deployment.
+//
+// What replaced them is true and independently checkable. Do not add a claim
+// here that /trust cannot back up.
 export const compliance = {
   eyebrow: "COMPLIANCE",
   headline: "Enterprise-Grade Security Standards",
-  badges: ["SOC 2", "GDPR", "HIPAA"],
+  badges: ["TCPA", "GDPR", "CCPA"],
   cards: [
     {
       title: "End-to-End Encryption",
       body: "All data encrypted in transit and at rest using AES-256",
     },
     {
-      title: "Zero Data Retention",
-      body: "Your data is never stored or used for model training",
+      title: "90-Day Retention",
+      body: "Transcripts and recordings deleted automatically. Never used for model training",
     },
     {
-      title: "Private Deployment",
-      body: "Deploy in your own VPC for complete data sovereignty",
+      title: "Isolated Per Client",
+      body: "Row-level tenant isolation. Your data is never pooled with another client's",
     },
   ],
 } as const;

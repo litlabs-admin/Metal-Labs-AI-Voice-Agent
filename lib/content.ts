@@ -383,3 +383,285 @@ export const privacy = {
     },
   ] satisfies PolicySection[],
 };
+
+// §17 - Trust Center (/trust). Written for a client's compliance, risk or
+// infosec reviewer, not for a buyer. Two rules for editing this block:
+//
+//   1. Every claim must be true of the platform TODAY. A reviewer who finds
+//      one overstatement stops believing the rest of the page.
+//   2. Gaps are stated here, not hidden. "What we do not do" is the section a
+//      reviewer trusts the page for; deleting it makes the page weaker, not
+//      stronger.
+//
+// Update this block (not the page) when platform behaviour changes.
+export const TRUST_EMAIL = "compliance@metallabs.io";
+
+export type TrustBlock =
+  | { type: "p"; text: string }
+  | { type: "list"; items: string[] }
+  | { type: "facts"; items: { term: string; detail: string }[] };
+
+export type TrustSection = {
+  id: string;
+  title: string;
+  blocks: TrustBlock[];
+};
+
+export const trust = {
+  eyebrow: "Trust Center",
+  title: "Security, Privacy & Compliance",
+  intro:
+    "How Metal Labs secures data, what we deliberately never handle, and how calling activity stays inside the rules. Written for compliance and security reviewers.",
+  metaDescription:
+    "Metal Labs Trust Center: encryption, tenant isolation, 90-day data retention, TCPA calling-window enforcement, DNC handling, and our subprocessor list.",
+  updatedAt: "2026-09-19",
+  updatedLabel: "September 19, 2026",
+
+  // The four things a reviewer checks first, surfaced above the detail.
+  highlights: [
+    { term: "Encrypted throughout", detail: "TLS in transit. Encrypted at rest on GCP and Supabase." },
+    { term: "90-day retention", detail: "Transcripts and recordings are deleted automatically." },
+    { term: "TCPA enforced in code", detail: "Calling windows are checked before every dial, and fail closed." },
+    { term: "Isolated per client", detail: "No pooled data. No model training on your data." },
+  ],
+
+  sections: [
+    {
+      id: "what-we-are",
+      title: "What Metal Labs Is",
+      blocks: [
+        {
+          type: "p",
+          text: "Metal Labs places and receives phone calls for a lender or brokerage using an AI voice agent, and writes the outcome of each call back into that client's own CRM.",
+        },
+        {
+          type: "p",
+          text: "Your CRM stays the system of record. We do not replace it and we do not retain your contact database. We hold what is needed to place a call and report on it, for as long as your retention window allows.",
+        },
+        {
+          type: "p",
+          text: "For consumer information processed on your behalf, you are the controller and Metal Labs is the processor. We act on your documented instructions, and we do not sell or share consumer personal information.",
+        },
+      ],
+    },
+    {
+      id: "security",
+      title: "How Data Is Secured",
+      blocks: [
+        {
+          type: "facts",
+          items: [
+            {
+              term: "In transit",
+              detail: "TLS on every external connection, with certificates renewed automatically. Internal service traffic does not cross the public internet.",
+            },
+            {
+              term: "At rest",
+              detail: "PostgreSQL on Supabase and object storage on Google Cloud, both encrypted at rest. Recording buckets are private with no public objects.",
+            },
+            {
+              term: "Your credentials",
+              detail: "CRM keys and telephony tokens are envelope-encrypted with Fernet, using a key held outside the database. The platform refuses to start without a valid key, so at-rest encryption cannot silently degrade.",
+            },
+            {
+              term: "API keys",
+              detail: "Stored only as SHA-256 hashes. The plaintext is shown once at creation and cannot be recovered afterwards.",
+            },
+            {
+              term: "Access control",
+              detail: "JWT authentication, server-side role-based access control, and row-level tenant isolation. One client cannot reach another client's calls, recordings or leads.",
+            },
+            {
+              term: "Audit trail",
+              detail: "Every change-making request is logged with actor, action, target, result and source IP.",
+            },
+            {
+              term: "Outbound protection",
+              detail: "Client-configured webhooks resolve DNS and reject private and internal address ranges at request time, with redirects disabled.",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: "what-we-never-handle",
+      title: "What We Never Handle",
+      blocks: [
+        {
+          type: "p",
+          text: "Some of this is policy. Most of it is a design constraint: the platform has no field to put the data in.",
+        },
+        {
+          type: "list",
+          items: [
+            "No Social Security numbers, dates of birth, or financial account numbers. The agent does not ask for them and no field stores them.",
+            "No card or bank details. We take no consumer payments, so consumer data is outside PCI scope.",
+            "No credit-report data. We are not a consumer reporting agency and do not pull, store or resell credit data.",
+            "No protected health information. The platform is not designed for it and should not be used for it.",
+          ],
+        },
+        {
+          type: "p",
+          text: "A hard deny-list stops sensitive CRM fields from ever being spoken aloud or reaching the language model, even when your CRM sends them to us. It covers loan amounts, property values, purchase prices, credit ratings, lead sources, consent tokens and internal record identifiers.",
+        },
+        {
+          type: "p",
+          text: "An optional guardrail prevents the agent from stating any rate, payment or APR at all, and instructs it to defer to your licensed staff. The agent does not underwrite, approve, deny, price or advise.",
+        },
+      ],
+    },
+    {
+      id: "retention",
+      title: "Retention and Deletion",
+      blocks: [
+        {
+          type: "facts",
+          items: [
+            {
+              term: "90 days",
+              detail: "Call transcripts, AI summaries and audio recordings are deleted 90 days after the call. A scheduled sweeper removes the recording object from storage, not just the reference to it.",
+            },
+            {
+              term: "Recordings are never public",
+              detail: "Playback uses a short-lived signed link, generated on request and valid for one hour by default. There is no permanent URL, and an expired link grants no access.",
+            },
+            {
+              term: "On termination",
+              detail: "On written request, we delete your tenant data — calls, transcripts, recordings, agent configuration and stored credentials — within 30 days, and confirm in writing.",
+            },
+            {
+              term: "Consumer requests",
+              detail: "We support export and erasure for an individual consumer record, actioned through you as the controller.",
+            },
+          ],
+        },
+        {
+          type: "p",
+          text: "Call metadata — time, duration and outcome — is kept after the purge for billing and reporting integrity. It contains no conversation content.",
+        },
+      ],
+    },
+    {
+      id: "calling-compliance",
+      title: "Calling Compliance",
+      blocks: [
+        {
+          type: "p",
+          text: "Calling rules are enforced in code before a call is placed, not left to configuration or good intentions.",
+        },
+        {
+          type: "facts",
+          items: [
+            {
+              term: "Calling windows",
+              detail: "Every outbound call is checked against the federal 8:00–21:00 window in the called party's own local time, derived from their number and state.",
+            },
+            {
+              term: "The baseline cannot be relaxed",
+              detail: "A client configuration cannot widen the federal window. Turning a workflow's own settings off falls back to the federal default, never to no restriction.",
+            },
+            {
+              term: "It fails closed",
+              detail: "If we cannot determine the contact's timezone, the call is allowed only when it is inside the legal window in both Eastern and Pacific time — the full span of the continental United States. Unknown never means permitted.",
+            },
+            {
+              term: "Do-not-call handling",
+              detail: "Contacts on your do-not-call and suppression lists are excluded, and we honour the stop-list stage in your CRM immediately before dialling. That check also fails closed: if your CRM cannot be reached, the call is held rather than placed.",
+            },
+            {
+              term: "State licensing",
+              detail: "Calling can be restricted to the states where you are licensed.",
+            },
+            {
+              term: "Pacing",
+              detail: "Per-account and per-campaign concurrency caps, configurable operating hours, and an optional weekend hold.",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: "ai-and-your-data",
+      title: "AI and Your Data",
+      blocks: [
+        {
+          type: "list",
+          items: [
+            "We do not train, fine-tune or improve any AI model on your data or your consumers' conversations.",
+            "Our speech, language and voice providers are contracted on terms that exclude customer content from their training.",
+            "We do not pool data across clients. There is no shared lead pool and no cross-client analytics.",
+            "We do not sell, rent or broker consumer data. There is no advertising component to this platform.",
+          ],
+        },
+      ],
+    },
+    {
+      id: "infrastructure",
+      title: "Infrastructure and Subprocessors",
+      blocks: [
+        {
+          type: "p",
+          text: "Metal Labs runs on Google Cloud Platform and Supabase, both independently certified to SOC 2 Type II. These providers process data on our behalf:",
+        },
+        {
+          type: "facts",
+          items: [
+            { term: "Google Cloud Platform", detail: "Compute and encrypted object storage for recordings." },
+            { term: "Supabase", detail: "Managed PostgreSQL and authentication." },
+            { term: "LiveKit", detail: "Real-time audio transport during a call." },
+            { term: "Twilio / Telnyx", detail: "Telephony carriage." },
+            { term: "Deepgram", detail: "Speech-to-text." },
+            { term: "OpenAI", detail: "Language understanding." },
+            { term: "ElevenLabs", detail: "Text-to-speech." },
+            { term: "Resend / Google Workspace", detail: "Notification email to your staff." },
+          ],
+        },
+        {
+          type: "p",
+          text: "Clients are notified of material changes to this list. A current copy is available on request.",
+        },
+      ],
+    },
+    {
+      id: "what-we-do-not-claim",
+      title: "What We Do Not Claim",
+      blocks: [
+        {
+          type: "p",
+          text: "A trust page is only useful if it is candid about its limits. These are ours today:",
+        },
+        {
+          type: "facts",
+          items: [
+            {
+              term: "No SOC 2 certification of our own",
+              detail: "Our infrastructure providers hold SOC 2 Type II. Metal Labs has not yet completed a platform-level audit. We will complete a security questionnaire on request.",
+            },
+            {
+              term: "No third-party penetration test yet",
+              detail: "We run automated dependency scanning, and our access-control, tenant-isolation and request-safety controls are covered by an automated test suite of over 1,500 tests.",
+            },
+            {
+              term: "No HIPAA or BAA",
+              detail: "The platform is not built for protected health information.",
+            },
+            {
+              term: "Consent is yours to hold",
+              detail: "We call the contacts you supply. Establishing a lawful basis and any prior express written consent remains your responsibility. We enforce the timing, state and stop-list rules around those contacts.",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: "incidents",
+      title: "Incident Response",
+      blocks: [
+        {
+          type: "p",
+          text: "Suspected incidents are triaged immediately. If a breach affects your data, we notify you without undue delay and within 72 hours of confirming it, with what is known, what is affected and what is being done. Audit and infrastructure logs support forensic reconstruction.",
+        },
+      ],
+    },
+  ] satisfies TrustSection[],
+};

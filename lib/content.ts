@@ -428,8 +428,8 @@ export const trust = {
     "How Metal Labs secures data, what we deliberately never handle, and how calling activity stays inside the rules. Written for compliance and security reviewers.",
   metaDescription:
     "Metal Labs Trust Center: encryption, tenant isolation, 90-day data retention, TCPA calling-window enforcement, DNC handling, and our subprocessor list.",
-  updatedAt: "2026-09-19",
-  updatedLabel: "September 19, 2026",
+  updatedAt: "2026-08-18",
+  updatedLabel: "August 18, 2026",
 
   // The four things a reviewer checks first, surfaced above the detail.
   highlights: [

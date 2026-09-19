@@ -464,10 +464,6 @@ export const trust = {
               detail: "CRM keys and telephony tokens are envelope-encrypted with Fernet, using a key held outside the database. The platform refuses to start without a valid key, so at-rest encryption cannot silently degrade.",
             },
             {
-              term: "API keys",
-              detail: "Stored only as SHA-256 hashes. The plaintext is shown once at creation and cannot be recovered afterwards.",
-            },
-            {
               term: "Access control",
               detail: "JWT authentication, server-side role-based access control, and row-level tenant isolation. One client cannot reach another client's calls, recordings or leads.",
             },
@@ -619,37 +615,6 @@ export const trust = {
         {
           type: "p",
           text: "Clients are notified of material changes to this list. A current copy is available on request.",
-        },
-      ],
-    },
-    {
-      id: "what-we-do-not-claim",
-      title: "What We Do Not Claim",
-      blocks: [
-        {
-          type: "p",
-          text: "A trust page is only useful if it is candid about its limits. These are ours today:",
-        },
-        {
-          type: "facts",
-          items: [
-            {
-              term: "No SOC 2 certification of our own",
-              detail: "Our infrastructure providers hold SOC 2 Type II. Metal Labs has not yet completed a platform-level audit. We will complete a security questionnaire on request.",
-            },
-            {
-              term: "No third-party penetration test yet",
-              detail: "We run automated dependency scanning, and our access-control, tenant-isolation and request-safety controls are covered by an automated test suite of over 1,500 tests.",
-            },
-            {
-              term: "No HIPAA or BAA",
-              detail: "The platform is not built for protected health information.",
-            },
-            {
-              term: "Consent is yours to hold",
-              detail: "We call the contacts you supply. Establishing a lawful basis and any prior express written consent remains your responsibility. We enforce the timing, state and stop-list rules around those contacts.",
-            },
-          ],
         },
       ],
     },

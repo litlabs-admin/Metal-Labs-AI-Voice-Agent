@@ -623,6 +623,7 @@ export const trust = {
             { term: "Deepgram", detail: "Speech-to-text." },
             { term: "OpenAI", detail: "Language understanding." },
             { term: "ElevenLabs", detail: "Text-to-speech." },
+            { term: "Microsoft Azure (Speech)", detail: "Text-to-speech, for agents configured with an Azure voice." },
             { term: "Resend / Google Workspace", detail: "Notification email to your staff." },
           ],
         },

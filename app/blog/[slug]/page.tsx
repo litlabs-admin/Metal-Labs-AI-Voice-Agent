@@ -6,7 +6,7 @@ import { PostHeader } from "@/components/sections/blog/PostHeader";
 import { TagChips } from "@/components/sections/blog/TagList";
 import { getPostBySlug, getPublishedPosts, type BlogPost } from "@/lib/blog";
 import { Markdown } from "@/lib/markdown";
-import { SITE_URL, brand } from "@/lib/content";
+import { OG_IMAGE, SITE_URL, brand } from "@/lib/content";
 
 /** Up to 3 other published posts, newest first, for the "More Posts" block. */
 const MORE_POSTS_COUNT = 3;
@@ -51,7 +51,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
           alt: post.cover.alt,
         },
       ]
-    : undefined;
+    : [OG_IMAGE];
 
   return {
     title: `${post.title} | ${brand.name}`,

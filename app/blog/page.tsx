@@ -3,7 +3,7 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { FeaturedPost } from "@/components/sections/blog/FeaturedPost";
 import { PostGrid } from "@/components/sections/blog/PostGrid";
 import { getPublishedPosts } from "@/lib/blog";
-import { blog } from "@/lib/content";
+import { OG_IMAGE, blog } from "@/lib/content";
 
 // 1 hour ISR. Mirrors BLOG_REVALIDATE in lib/blog.ts - Next requires a literal
 // here because this export is read statically at build time.
@@ -18,11 +18,13 @@ export const metadata: Metadata = {
     title: blog.metaTitle,
     description: blog.metaDescription,
     url: "/blog",
+    images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
     title: blog.metaTitle,
     description: blog.metaDescription,
+    images: [OG_IMAGE],
   },
 };
 

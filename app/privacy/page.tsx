@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Reveal } from "@/components/ui/Reveal";
-import { PRIVACY_EMAIL, brand, privacy, type PolicyBlock } from "@/lib/content";
+import { OG_IMAGE, PRIVACY_EMAIL, brand, privacy, type PolicyBlock } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: `${privacy.title} | ${brand.name}`,
@@ -12,6 +12,7 @@ export const metadata: Metadata = {
     title: `${privacy.title} | ${brand.name}`,
     description: privacy.metaDescription,
     url: "/privacy",
+    images: [OG_IMAGE],
   },
 };
 

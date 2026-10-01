@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Reveal } from "@/components/ui/Reveal";
-import { TRUST_EMAIL, brand, trust, type TrustBlock } from "@/lib/content";
+import { OG_IMAGE, TRUST_EMAIL, brand, trust, type TrustBlock } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: `${trust.title} | ${brand.name}`,
@@ -12,6 +12,7 @@ export const metadata: Metadata = {
     title: `${trust.title} | ${brand.name}`,
     description: trust.metaDescription,
     url: "/trust",
+    images: [OG_IMAGE],
   },
 };
 

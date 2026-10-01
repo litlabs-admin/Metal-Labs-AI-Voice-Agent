@@ -35,18 +35,22 @@ $("#tl").innerHTML=steps.map((s,i)=>`<div class="st" data-i="${i}"><b>${s[0]}</b
 let k=0;function dstep(){const ph=$("#ph");if(k===0){ph.innerHTML='<div class="m s">Today 6:15 AM</div>'}root.querySelectorAll(".st").forEach((e,i)=>e.classList.toggle("on",i<=k));const s=steps[k];const d=document.createElement("div");d.className="m "+s[3];d.textContent=s[2];ph.appendChild(d);k=(k+1)%steps.length}
 dstep();setInterval(dstep,2600);
 // uses
-const ucs=[["Origination","Live","g","Answers new leads, works old ones, books your calls, collects docs."],["Processing","Coming","","Chases conditions and keeps the file moving."],["Servicing","Coming","","Borrower questions and reminders after closing."],["Collections","Coming","","Compliant outreach on late payments."]];
+const ucs=[["Origination","Live","g","Answers new leads, works old ones, books your calls, collects docs."],["Processing","Coming","","Document collection only: chases borrowers for missing docs and tells them about errors on the ones they sent."]];
 $("#uc").innerHTML=ucs.map(u=>`<div class="u ${u[1]=="Live"?"live":""}"><h3>${u[0]}</h3><p>${u[3]}</p><span class="tag ${u[2]}">${u[1]}</span></div>`).join("");root.querySelectorAll(".u").forEach(e=>e.onclick=()=>e.classList.toggle("open"));
 // faq
 const fq=[["Will it replace me?","No. It handles the first touch and the chasing. You do the advice, the rate talk and the close. If a borrower wants a human, it hands off."],["Is it legal to call my leads?","Only if they gave the right consent. It checks consent before every contact and skips the rest. [Have counsel review this answer before publishing.]"],["What does it say to my borrowers?","You see and edit the scripts. It says it is your assistant, never quotes a rate, and never gives advice."],["Do I have to switch CRM or LOS?","No. It connects to the tools you use. [List only integrations that are live.]"],["Will it step on my own calls?","Not if you don't want it to. Mark any lead or active deal as yours and it stays away."],["What does it cost?","One plan: $695 a month, billed monthly. No annual contract. It includes 3,000 minutes of AI voice calling a month."],["Do you send texts and emails?","The voice agent plugs into your CRM. Notifications, texts and emails go out through your CRM, using its own credits."]];
 $("#fq").innerHTML=fq.map(q=>`<div class="q"><b>${q[0]}</b><p>${q[1]}</p></div>`).join("");root.querySelectorAll(".q").forEach(e=>e.onclick=()=>e.classList.toggle("open"));root.querySelector(".q").classList.add("open");
 
 // board
-const cols=["New lead","Docs needed","In processing","Clear to close"];const deals=[["Dana R.","Purchase"],["Marcus T.","Refi"],["Gary L.","Purchase"]];
+const cols=["New lead","Docs needed","In processing","Clear to close"];const deals=[["Dana R.","Purchase"],["Marcus T.","Refi"],["Gary L.","Purchase"],["Priya S.","Refi"],["Tom H.","Purchase"],["Lena W.","Purchase"]];
+const lbl=["New lead, first touch queued","Chasing: pay stub via your CRM","All docs in","Ready for you"];
 let timers=[];
-function board(){timers.forEach(clearTimeout);timers=[];const b=$("#board");b.innerHTML=cols.map(c=>`<div class="col"><h4>${c}</h4></div>`).join("");const col=i=>b.children[i];const cs=deals.map(d=>{const e=document.createElement("div");e.className="c";e.innerHTML=`<b>${d[0]}</b><small>${d[1]}</small><div class="bar"><i></i></div>`;return e});cs.forEach(c=>col(0).appendChild(c));
- const step=(c,to,t,l)=>timers.push(setTimeout(()=>{c.querySelector("small").textContent=l;c.classList.toggle("chasing",to===1);col(to).appendChild(c);c.querySelector(".bar i").style.width=(to*33)+"%"},t));
- cs.forEach((c,i)=>{step(c,1,900+i*500,"Chasing: pay stub via your CRM");step(c,2,3400+i*700,"All docs in");step(c,3,5800+i*700,"Ready for you")})}
+function board(){timers.forEach(t=>{clearTimeout(t);clearInterval(t)});timers=[];const b=$("#board");b.innerHTML=cols.map(c=>`<div class="col"><h4>${c}</h4></div>`).join("");const col=i=>b.children[i];
+ const pos=[3,2,1,1,0,0];
+ const cs=deals.map(d=>{const e=document.createElement("div");e.className="c";e.innerHTML=`<b>${d[0]}</b><small>${d[1]}</small><div class="bar"><i></i></div>`;return e});
+ const put=(c,i,p)=>{c.querySelector("small").textContent=lbl[p];c.classList.toggle("chasing",p===1);c.querySelector(".bar i").style.width=(p*33)+"%";col(p).appendChild(c)};
+ cs.forEach((c,i)=>put(c,i,pos[i]));
+ timers.push(setInterval(()=>{cs.forEach((c,i)=>{pos[i]=(pos[i]+1)%4;put(c,i,pos[i])})},2600))}
 let started=false;
 // scroll effects
 const prog=$("#progress");const hero=$(".hero");

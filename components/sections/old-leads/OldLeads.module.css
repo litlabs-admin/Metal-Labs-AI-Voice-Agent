@@ -1,0 +1,369 @@
+/* §4b - "Old leads". Kept in a module rather than Tailwind variants for the same reason as
+   Compliance.module.css: the reference switches at 1440px, and Tailwind v4 sorts an arbitrary
+   1440 variant *before* `md:`, so `md:` would win on any property they share. Mobile-first:
+   base = phone, 768 = tablet, 1440 = desktop.
+
+   Sized to fit a single viewport on desktop (no scroll to see the whole section): tighter
+   paddings/gaps than the other hairline-grid sections, a shorter dot grid (more columns, fewer
+   rows for the same 480 dots), and a smaller stat figure. */
+
+.section {
+  /* Brand blue used elsewhere for this same "by hand" meaning - see --lc-blue-ink in
+     lead-call/LeadCall.module.css. No theme token for it yet, so it's scoped here, shared by
+     the dot grid and the card quote rule below. */
+  --ol-hand: #1f55f5;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 20px 48px;
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 28px;
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+}
+
+.titleBlock {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.heading {
+  max-width: 720px;
+  font-size: 24px;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+/* ---------- Stat row: dot grid + figure/legend/note ---------- */
+
+.statRow {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.gridWrap {
+  width: 100%;
+}
+
+.statCol {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.statMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.statNumber {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.statFigure {
+  font-size: 48px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.statSuffix {
+  font-size: 15px;
+  line-height: 1;
+}
+
+.legend {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  gap: 16px;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 2px;
+  font-size: 14px;
+  line-height: 1;
+  transition: opacity 0.2s ease;
+}
+
+.legendItem:hover,
+.legendItem[data-active="true"] {
+  opacity: 0.65;
+}
+
+.legendSwatch {
+  display: block;
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  transition: transform 0.2s var(--ease-out-ml);
+}
+
+.legendItem[data-active="true"] .legendSwatch {
+  transform: scale(1.3);
+}
+
+.dotUntouched {
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+.dotHand {
+  background-color: var(--ol-hand);
+}
+
+.dotAgent {
+  background-color: var(--color-text);
+}
+
+.note {
+  max-width: 420px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* ---------- Dot grid ---------- */
+/* More columns = fewer rows for the same 480 dots, which is what keeps the grid short. */
+
+.dotGrid {
+  display: grid;
+  grid-template-columns: repeat(30, minmax(0, 1fr));
+  gap: 3px;
+  width: 100%;
+}
+
+.dot {
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.08);
+  transform: scale(0.82);
+  transition:
+    background-color 0.32s var(--ease-bounce),
+    transform 0.32s var(--ease-bounce),
+    opacity 0.2s ease;
+  transition-delay: calc(var(--i) * 6ms), calc(var(--i) * 6ms), 0s;
+}
+
+.dot[data-kind="hand"] {
+  background-color: var(--ol-hand, #1f55f5);
+  transform: scale(1);
+}
+
+.dotGrid[data-phase="fill"] .dot[data-kind="agent"],
+.dotGrid[data-phase="hold"] .dot[data-kind="agent"] {
+  background-color: var(--color-text);
+  transform: scale(1);
+}
+
+.dotGrid[data-phase="reset"] .dot[data-kind="agent"],
+.dotGrid[data-phase="idle"] .dot[data-kind="agent"] {
+  transition-delay: 0s;
+  transition-duration: 0.4s;
+}
+
+/* Legend hover/focus: dim the categories not being pointed at. Hovering "Untouched" dims the
+   hand dots always, and the agent dots only once they're fully lit (phase=hold) - mid-sweep,
+   the still-grey agent dots already read as "untouched" without extra dimming. */
+.dotGrid[data-focus="hand"] .dot[data-kind="agent"] {
+  opacity: 0.15;
+}
+
+.dotGrid[data-focus="agent"] .dot[data-kind="hand"] {
+  opacity: 0.15;
+}
+
+.dotGrid[data-focus="untouched"] .dot[data-kind="hand"] {
+  opacity: 0.15;
+}
+
+.dotGrid[data-focus="untouched"][data-phase="hold"] .dot[data-kind="agent"] {
+  opacity: 0.15;
+}
+
+@keyframes old-leads-pulse {
+  0% {
+    opacity: 1;
+  }
+  40% {
+    opacity: 0.55;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.statRow[data-phase="hold"] .statFigure {
+  animation: old-leads-pulse 1.1s var(--ease-out-ml) 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dot {
+    transition-delay: 0s !important;
+  }
+}
+
+/* ---------- Cards ---------- */
+
+.cards {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.card {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+}
+
+.glyph {
+  display: block;
+  flex: none;
+  width: 24px;
+  height: 24px;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+}
+
+.cardText {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* min-height reserves room for two lines, so a wrapped title ("Went quiet after a quote")
+   doesn't push its quote below where the one-line cards start theirs - every card's quote
+   begins at the same row regardless of title length. */
+.cardTitle {
+  min-height: 48px;
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 400;
+}
+
+.cardQuote {
+  padding-left: 12px;
+  border-left: 2px solid var(--ol-hand);
+  font-size: 14px;
+  line-height: 22px;
+}
+
+@media (min-width: 768px) {
+  .section {
+    padding: 40px 30px 56px;
+  }
+  .inner {
+    gap: 36px;
+  }
+  .heading {
+    font-size: 32px;
+  }
+  .statRow {
+    gap: 28px;
+  }
+  .statCol {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .statFigure {
+    font-size: 68px;
+  }
+  .dotGrid {
+    grid-template-columns: repeat(40, minmax(0, 1fr));
+    gap: 4px;
+  }
+  .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .card {
+    gap: 14px;
+    padding: 18px;
+  }
+  .cardTitle {
+    min-height: 52px;
+    font-size: 20px;
+    line-height: 26px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .section {
+    padding: 48px 30px 64px;
+  }
+  .inner {
+    gap: 40px;
+  }
+  .heading {
+    font-size: 38px;
+  }
+  .statRow {
+    flex-direction: row;
+    align-items: stretch;
+    gap: 56px;
+  }
+  .gridWrap {
+    flex: 1 1 0;
+    width: 1px;
+    display: flex;
+    align-items: center;
+  }
+  .statCol {
+    flex: none;
+    width: 240px;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 20px;
+  }
+  .statFigure {
+    font-size: 84px;
+  }
+  .dotGrid {
+    grid-template-columns: repeat(60, minmax(0, 1fr));
+    gap: 4px;
+  }
+  .cards {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .card {
+    gap: 16px;
+    padding: 20px;
+  }
+  .glyph {
+    width: 28px;
+    height: 28px;
+  }
+  .cardTitle {
+    min-height: 56px;
+    font-size: 22px;
+    line-height: 28px;
+  }
+}

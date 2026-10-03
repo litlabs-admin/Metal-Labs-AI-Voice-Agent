@@ -43,6 +43,7 @@ export const nav = {
     { label: "Solutions", href: "/#solutions" },
     { label: "Use Cases", href: "/#use-cases" },
     { label: "Compliance", href: "/#compliance" },
+    { label: "Pricing", href: "/#pricing" },
     { label: "Blog", href: "/blog" },
   ],
   cta: "Book a Demo",
@@ -80,6 +81,137 @@ export const hero = {
   cta: "Book a Demo",
   caption: "Built for US home lenders · Voice · Text · Email · TCPA compliant",
 } as const;
+
+// §3 - Hero "Hear it live": a call-me form in a dialog. The agent rings the visitor's phone
+// (the API places an outbound call; no audio plays in the browser), so after submit the dialog
+// swaps to the agent pill and steps through timed labels. Consent copy pending client sign-off.
+export const hearItLive = {
+  cta: "Hear it live",
+  title: "Hear our agent live",
+  subtitle: "Leave your details and our AI agent will call you in seconds.",
+  nameLabel: "Name",
+  namePlaceholder: "Jane Smith",
+  emailLabel: "Email",
+  emailPlaceholder: "jane@lender.com",
+  phoneLabel: "Phone",
+  countryLabel: "Country code",
+  countrySearch: "Search country or code",
+  countryEmpty: "No matching country",
+  consent:
+    "I agree to receive a one-time AI-powered demo call from Metal Labs at this number. Message and data rates may apply. See our",
+  consentLink: "Privacy Policy",
+  submit: "Call me",
+  close: "Close",
+  retry: "Try again",
+  notReceived: "Didn't get a call?",
+  // One message per reason code from lib/validation.ts and lib/phone.ts.
+  errors: {
+    name: {
+      empty: "Please enter your name.",
+      short: "Please enter your full name.",
+      chars: "Names can only contain letters, spaces, hyphens and apostrophes.",
+    },
+    email: {
+      empty: "Please enter your email.",
+      invalid: "Please enter a valid email address, like jane@lender.com.",
+    },
+    phone: {
+      empty: "Please enter your phone number.",
+      chars: "Phone numbers can only contain digits.",
+      short: "This number is too short for the selected country.",
+      long: "This number is too long for the selected country.",
+      invalid: "This isn't a valid number for the selected country.",
+    },
+    consent: "Please agree to receive the call.",
+    failed: "We couldn't place the call. Please try again in a moment.",
+  },
+  // Pill labels, in order. "…" labels shimmer; the last one reads solid.
+  status: {
+    connecting: "Connecting…",
+    calling: "Calling you now…",
+    pickUp: "Pick up your phone…",
+    placed: "Call placed",
+  },
+  placedNote: "Your phone should be ringing. Answer to talk with the agent.",
+} as const;
+
+// §3b - Speed to lead: one new lead worked from CRM to a live handoff, told as a 4-step
+// accordion (left) beside an illustration panel (right). Each step plays three beats - first
+// card, typing dots, second card - and `status` gives the agent pill's label per beat (the last
+// entry holds if there are fewer). A label ending in "…" is in progress and shimmers; one
+// without is a finished state and reads solid. `ms` is how long the step plays before autoplay moves on.
+// Panel copy and data are the client's, verbatim.
+export const leadCall = {
+  eyebrow: "Speed to lead",
+  headline: "Every new lead, called before it cools.",
+  subline:
+    "Your agent dials in seconds, runs the compliance checks, qualifies the borrower, and books them in or puts them straight through to you.",
+  cta: "Book a Demo",
+  steps: [
+    {
+      id: "call",
+      title: "Called in seconds",
+      desc: "A new lead hits your CRM. Your agent dials it before it goes cold.",
+      status: ["New lead", "Calling Dana R…", "Connected"],
+      ms: 8500,
+    },
+    {
+      id: "prequal",
+      title: "Pre-qualified on the call",
+      desc: "Compliance checks first, then the right questions.",
+      status: ["Listening…"],
+      ms: 9000,
+    },
+    {
+      id: "booked",
+      title: "Qualified and booked",
+      desc: "A qualified lead goes straight onto your calendar.",
+      status: ["Qualifying…", "Booking…", "Booked"],
+      ms: 9000,
+    },
+    {
+      id: "transfer",
+      title: "Warm transfer",
+      desc: "Free right now? You take the call live, fully briefed.",
+      status: ["Transferring to you…", "Transferring to you…", "Connected to you"],
+      ms: 8500,
+    },
+  ],
+
+  // Step 1
+  crm: {
+    title: "A new lead hits your CRM",
+    lead: { initials: "DR", name: "Dana R.", meta: "Zillow · Purchase", age: "now" },
+    dialTitle: "Dialed in 2 seconds",
+    dialLabel: "from new lead to first ring",
+    connected: "Connected",
+  },
+  // Step 2
+  checksTitle: "Checks pass",
+  checks: ["Consent on file", "Not on Do-Not-Call", "State rules (TX)", "Calling hours"],
+  questionsTitle: "Right questions asked",
+  questions: [
+    { q: "Buying or refinancing?", a: "Buying" },
+    { q: "Price range?", a: "About $450k" },
+    { q: "Timeline?", a: "60 days" },
+    { q: "Working with another LO?", a: "No" },
+  ],
+  // Step 3
+  qualified: { title: "Lead qualified", chips: ["Purchase", "~$450k", "60 days", "Consent valid"] },
+  calendar: {
+    source: "Google Calendar",
+    day: "Tomorrow",
+    event: { title: "Call: Dana R.", detail: "9:30 AM · purchase" },
+    confirm: "Invite sent to you",
+  },
+  // Step 4
+  transfer: { agent: "Agent", you: "You", lo: "Loan officer", connected: "Connected" },
+  brief: {
+    title: "You take the call, fully briefed",
+    name: "Dana R.",
+    text: "Purchase, ~$450k, 60 days. Consent valid. No other LO.",
+  },
+};
 
 // §4 - Featured testimonial + trust logos
 export const testimonial = {
@@ -150,6 +282,38 @@ export const omnichannel = {
       kicker: "Email",
       title: "Automated outreach that doesn't feel automated",
       body: "Personalized emails triggered by borrower behavior, not a blast schedule. Every message in context.",
+    },
+  ],
+} as const;
+
+// §4b - Old leads: dot-grid stat (share of the CRM database worked) over four lead-type cards.
+export const oldLeads = {
+  eyebrow: "Old leads",
+  headline: "Your CRM is a goldmine. You can't dial it all.",
+  statSuffix: "% worked",
+  legend: { untouched: "Untouched", hand: "You, by hand", agent: "Metal Labs" },
+  note: "LOs reach about 4 to 6% of their database a month.",
+  source: "BNTouch",
+  cards: [
+    {
+      title: "Went quiet after a quote",
+      quote: "Rates dropped today. Want me to rerun your numbers?",
+      icon: "/design/icons/old-leads-quote.svg",
+    },
+    {
+      title: "Never sent docs",
+      quote: "Just the pay stub for now. A photo is fine.",
+      icon: "/design/icons/old-leads-docs.svg",
+    },
+    {
+      title: "Said maybe later",
+      quote: "You mentioned spring. Still on track?",
+      icon: "/design/icons/old-leads-later.svg",
+    },
+    {
+      title: "Went elsewhere",
+      quote: "No worries. I'm here if anything changes.",
+      icon: "/design/icons/old-leads-elsewhere.svg",
     },
   ],
 } as const;
@@ -225,6 +389,98 @@ export const compliance = {
     {
       title: "Isolated Per Client",
       body: "Row-level tenant isolation. Your data is never pooled with another client's",
+    },
+  ],
+} as const;
+
+// §12b2 - Pricing: one plan. Top row: the client's "Your rules" switches beside one black receipt
+// (price, minutes, live rule outcomes, CTA). Below: what's included, as a 3x2 hairline grid.
+//
+// The rules demo shows what each guardrail *prevents*. Off-states are worded as hypotheticals
+// ("Would ...") on purpose: the FAQ says the agent checks consent and Do-Not-Call before every
+// contact and never quotes a rate, so the copy must not suggest those can be switched off.
+export const pricing = {
+  eyebrow: "Pricing",
+  headline: "One plan. Everything included.",
+  subhead:
+    "Every feature, every integration and every guardrail for one monthly price. Billed monthly, with no annual contract.",
+  includedLabel: "What's included",
+  plan: {
+    label: "Metal Labs · Your plan",
+    currency: "$",
+    price: "695",
+    period: "/month",
+    terms: "Billed monthly · No annual contract · USD",
+    meter: "3,000 voice minutes / month",
+    cta: "Book a demo",
+  },
+  included: [
+    { icon: "voice", title: "AI voice agent", detail: "3,000 calling minutes every month" },
+    { icon: "message", title: "Texts and email", detail: "Sent through your CRM, on your existing credits" },
+    { icon: "shield", title: "Compliance checks", detail: "TCPA and state Do-Not-Call, before every contact" },
+    { icon: "plug", title: "Integrations", detail: "Your CRM and calendar, plus Zapier and an open API" },
+    { icon: "document", title: "Origination tools", detail: "Pipeline, documents, rules and reporting" },
+    { icon: "support", title: "Dedicated support", detail: "A shared Slack or Microsoft Teams channel with our team" },
+  ],
+  rules: {
+    eyebrow: "Your rules · Included",
+    headline: "You set them. It follows them.",
+    hint: "Switch a rule off to see what it prevents.",
+    items: [
+      { id: "consent", title: "Only call leads who opted in", detail: "Skips anyone without consent to an AI call" },
+      { id: "hours", title: "Call within your hours", detail: "Holds after-hours leads until you open" },
+      { id: "owned", title: "Leave your active files alone", detail: "Never contacts a borrower you're already working" },
+      { id: "rates", title: "Hand off rate questions", detail: "Routes pricing questions straight to you" },
+    ],
+  },
+  preview: {
+    label: "Rules in action",
+    leads: [
+      { rule: "hours", name: "Dana R.", context: "New lead · 9:41 PM", on: "Waits until 8 AM", off: "Would call at 9:41 PM" },
+      { rule: "consent", name: "Priya S.", context: "No consent to AI calls", on: "Not contacted", off: "Would call anyway" },
+      { rule: "owned", name: "Gary L.", context: "Already on your file", on: "Left to you", off: "Would call your borrower" },
+      { rule: "rates", name: "Marcus T.", context: "Asks about rates", on: "Handed to you", off: "Would discuss rates" },
+    ],
+    statusOn: "All guardrails on",
+    // {n} and {total} are replaced at render.
+    statusOff: "{n} of {total} leads handled outside your rules",
+  },
+} as const;
+
+export type PricingRuleId = (typeof pricing.rules.items)[number]["id"];
+
+// §12c - FAQ. Bracketed text is an editor placeholder, kept on purpose until final copy lands.
+export const faq = {
+  eyebrow: "FAQ",
+  headline: "Straight answers.",
+  // "Ask an AI" buttons: each opens the assistant in a new tab with this question pre-filled
+  // (href + encodeURIComponent(askPrompt)). Naming the domain makes the assistant search the site.
+  askPrompt:
+    "What is Metal Labs (metallabs.io) and how does its AI voice agent for mortgage lenders work?",
+  askAi: [
+    { name: "ChatGPT", href: "https://chatgpt.com/?q=", icon: "/design/icons/chatgpt.png" },
+    { name: "Claude", href: "https://claude.ai/new?q=", icon: "/design/icons/claude-spark.png" },
+  ],
+  items: [
+    {
+      q: "Will it replace me?",
+      a: "No. It makes the first call and does the chasing. You do the advice and the close.",
+    },
+    {
+      q: "Is it legal to call my leads?",
+      a: "Only with the right consent. It checks consent and Do-Not-Call before every contact. [Have counsel review before publishing.]",
+    },
+    {
+      q: "What does it say?",
+      a: "You edit the script. It says it is your assistant and never quotes a rate.",
+    },
+    {
+      q: "Do I switch CRM?",
+      a: "No. It plugs into yours. [List only live integrations.]",
+    },
+    {
+      q: "What does it cost?",
+      a: "$695 a month, monthly. 3,000 voice minutes included. Texts and email go through your CRM, on its credits.",
     },
   ],
 } as const;

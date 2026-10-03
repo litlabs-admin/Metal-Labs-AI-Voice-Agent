@@ -1,0 +1,863 @@
+/* §3b - Speed to lead. A two-column story: a numbered accordion of the four steps (left) beside
+   one illustration panel (right) that plays the active step. The panel borrows the Solutions
+   section's language on purpose - its slow light sweep (over a blue photo here), white floating
+   cards with a soft shadow, 16px radii, Merriweather titles - so the two read as one system.
+
+   Sized to fit one viewport on desktop: the panel is a fixed 544px and the copy column is
+   shorter. Mobile-first: base = phone, 768 = tablet, 1024 = two columns, 1440 = desktop type.
+
+   Timed entrances inside a panel carry --d (seconds, set inline) and start when the card
+   mounts. Keyframes are local to this module (CSS Modules scope animation names). */
+
+.section {
+  --lc-ink: #0e0e13;
+  --lc-text: var(--color-text, #09090b);
+  --lc-body: #3f3f46;
+  --lc-muted: #71717a;
+  --lc-faint: #a1a1aa;
+  --lc-border: #e2e4e7; /* Solutions --color-border */
+  --lc-cream: #f2f0ed; /* --color-cream-2 */
+  --lc-mint: #62f6b5; /* --color-mint */
+  --lc-blue: linear-gradient(180deg, #4e87fc 0%, #0036fa 100%); /* Compliance/FAQ accent */
+  --lc-blue-ink: #1f55f5; /* also referenced by old-leads/OldLeads.module.css */
+  --lc-card-shadow: 0 10px 30px rgba(12, 30, 69, 0.08);
+  --lc-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --lc-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 72px 20px 56px;
+}
+
+.inner {
+  display: grid;
+  width: 100%;
+  max-width: var(--container-site, 1296px);
+  gap: 40px;
+  margin-inline: auto;
+}
+
+/* ---------- Copy column ---------- */
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.heading {
+  margin: 0;
+  font-size: 26px;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+.subline {
+  max-width: 520px;
+  margin: 0;
+  font-size: 16px;
+  line-height: 26px;
+}
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  border-top: 1px solid var(--lc-border);
+}
+
+.step {
+  position: relative;
+  display: grid;
+  width: 100%;
+  grid-template-columns: 36px 1fr;
+  padding: 18px 0;
+  border: 0;
+  border-bottom: 1px solid var(--lc-border);
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  outline: none;
+}
+
+.step:focus-visible {
+  border-radius: 6px;
+  box-shadow: 0 0 0 2px var(--lc-ink);
+}
+
+.stepNum {
+  padding-top: 5px;
+  font-family: var(--font-illustration);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0.08em;
+  color: var(--lc-faint);
+  transition: color 0.3s ease;
+}
+
+.stepTitle {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 19px;
+  font-weight: 300;
+  line-height: 1.35;
+  letter-spacing: -0.2px;
+  color: var(--lc-faint);
+  transition: color 0.3s ease;
+}
+
+.step:hover .stepTitle,
+.step:hover .stepNum {
+  color: var(--lc-body);
+}
+
+.step[aria-selected="true"] .stepTitle,
+.step[aria-selected="true"] .stepNum {
+  color: var(--lc-text);
+}
+
+/* Description: only the active row opens (0fr -> 1fr), so rows never jump in height. */
+.stepDescWrap {
+  display: grid;
+  grid-column: 2;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 0.4s var(--lc-ease),
+    opacity 0.3s ease;
+}
+
+.step[aria-selected="true"] .stepDescWrap {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.stepDesc {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.stepDescText {
+  display: block;
+  max-width: 440px;
+  padding-top: 6px;
+  font-size: 15px;
+  line-height: 23px;
+  color: var(--lc-muted);
+}
+
+/* Active row's progress: its bottom hairline fills in ink over the step. Visual only - the
+   JS timer advances the steps, so this just pauses alongside it. */
+.progress {
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 1px;
+  background: var(--lc-ink);
+  transform-origin: left;
+  animation: lc-progress var(--ms, 8000ms) linear both;
+}
+
+.progress[data-playing="false"] {
+  animation-play-state: paused;
+}
+
+.cta {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--lc-text);
+}
+
+.cta svg {
+  transition: transform 0.3s var(--lc-ease);
+}
+
+.cta:hover svg {
+  transform: translateX(4px);
+}
+
+/* ---------- Panel (Solutions mockup language) ---------- */
+
+.panel {
+  position: relative;
+  height: 560px;
+  overflow: hidden;
+  border: 1px solid var(--lc-border);
+  border-radius: 16px;
+  /* Blue light-arc photo; the portrait image is cropped to the bright arc across its middle. */
+  background: #2f6d9c url("/design/lead-call/panel-bg.jpg") center 55% / cover no-repeat;
+}
+
+.panel::after {
+  content: "";
+  position: absolute;
+  inset: -40% -60%;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(100deg, transparent 38%, rgba(255, 255, 255, 0.55) 50%, transparent 62%);
+  transform: translateX(-40%);
+  animation: lc-sheen 7s cubic-bezier(0.44, 0, 0.56, 1) infinite;
+}
+
+.panelInner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  padding: 28px 16px;
+}
+
+.stack {
+  display: flex;
+  width: 100%;
+  max-width: 420px;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.card {
+  padding: 16px 18px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: var(--lc-card-shadow);
+  transition:
+    transform 0.35s cubic-bezier(0.44, 0, 0.56, 1),
+    box-shadow 0.35s cubic-bezier(0.44, 0, 0.56, 1);
+  animation: lc-card-in 0.6s cubic-bezier(0.44, 0, 0.11, 1) both;
+}
+
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 36px rgba(12, 30, 69, 0.12);
+  }
+}
+
+.cardHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--lc-text);
+}
+
+.label {
+  font-family: var(--font-illustration);
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 14px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--lc-faint);
+}
+
+.enter {
+  animation: lc-rise 0.45s var(--lc-ease) var(--d, 0s) both;
+}
+
+/* Typing indicator between the two cards of a step. */
+.dots {
+  display: inline-flex;
+  align-self: flex-start;
+  gap: 4px;
+  padding: 11px 14px;
+  border-radius: 14px;
+  border-top-left-radius: 6px;
+  background: #fff;
+  box-shadow: var(--lc-card-shadow);
+  animation: lc-rise 0.3s var(--lc-ease) both;
+}
+
+.dots i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--lc-faint);
+  animation: lc-dot 0.9s ease-in-out infinite;
+}
+
+.dots i:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.dots i:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+/* ---------- Step 1: lead + dial ---------- */
+
+.leadRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.initials {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  flex: none;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--lc-cream);
+  font-family: var(--font-illustration);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--lc-body);
+}
+
+.leadText {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+}
+
+.leadName {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 20px;
+  color: var(--lc-text);
+}
+
+.leadMeta {
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--lc-muted);
+}
+
+.now {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #eef3ff;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--lc-blue-ink);
+}
+
+.nowDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--lc-blue-ink);
+  animation: lc-blink 1.4s ease-in-out infinite;
+}
+
+.dialRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.dialFigure {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.dialNumber {
+  font-family: var(--font-heading);
+  font-size: 40px;
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--lc-text);
+}
+
+.dialLabel {
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--lc-muted);
+}
+
+.live {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--lc-cream);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--lc-body);
+}
+
+.liveDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--lc-mint);
+  animation: lc-live 1.6s ease-out infinite;
+}
+
+/* ---------- Step 2: checks + questions ---------- */
+
+.checkGrid {
+  display: grid;
+  grid-template-columns: 1fr; /* one column on phones: "Not on Do-Not-Call" won't fit half */
+  gap: 6px;
+}
+
+.check {
+  display: flex;
+  min-height: 36px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px;
+  border-radius: 10px;
+  background: #f6f6f7;
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--lc-text);
+}
+
+.tick {
+  display: inline-flex;
+  width: 18px;
+  height: 18px;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--lc-ink);
+  color: #fff;
+  animation: lc-pop 0.4s var(--lc-spring) var(--d, 0s) both;
+}
+
+.tick path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: lc-draw 0.3s ease-out calc(var(--d, 0s) + 0.15s) forwards;
+}
+
+.tickMint {
+  background: var(--lc-mint);
+  color: var(--lc-ink);
+}
+
+.qaList {
+  display: flex;
+  flex-direction: column;
+}
+
+.qa {
+  display: flex;
+  min-height: 34px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-top: 1px solid #f0f0f2;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.qa:first-child {
+  border-top: 0;
+}
+
+.q {
+  color: var(--lc-muted);
+}
+
+/* Answers type in. `backwards` fill only: holding the last step can land a short answer one
+   step short ("No" -> "N"), so once done the element falls back to its unclipped self. */
+.a {
+  font-weight: 700;
+  white-space: nowrap;
+  color: var(--lc-text);
+  animation: lc-type calc(var(--n, 6) * 45ms) steps(var(--n, 6)) var(--d, 0s) backwards;
+}
+
+/* ---------- Step 3: qualified + calendar ---------- */
+
+.badge {
+  display: inline-flex;
+  width: 22px;
+  height: 22px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--lc-ink);
+  color: #fff;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #f6f6f7;
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--lc-body);
+}
+
+.event {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 14px 12px 18px;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #f3f6ff;
+  animation: lc-drop 0.55s var(--lc-spring) var(--d, 0s) both;
+}
+
+.event::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 4px;
+  background: var(--lc-blue);
+}
+
+.eventTitle {
+  font-size: 14.5px;
+  font-weight: 700;
+  line-height: 20px;
+  color: var(--lc-text);
+}
+
+.eventDetail {
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--lc-body);
+}
+
+.confirm {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0 0;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  color: var(--lc-text);
+}
+
+/* ---------- Step 4: handoff + brief ---------- */
+
+.handoff {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 14px;
+}
+
+.party {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 15px;
+  color: var(--lc-muted);
+}
+
+.avatar {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid var(--lc-border);
+  border-radius: 50%;
+  background: #fff;
+}
+
+.avatar img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
+.avatarYou {
+  border-color: var(--lc-ink);
+  background: var(--lc-ink);
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.avatarYou[data-on="true"] {
+  animation: lc-ring 1.8s ease-out infinite;
+}
+
+.line {
+  position: relative;
+  height: 2px;
+  margin-bottom: 21px; /* centre on the avatars, not on avatar + caption */
+  border-radius: 2px;
+  background: #e8e8eb;
+}
+
+.lineFill {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--lc-ink);
+  transform-origin: left;
+  animation: lc-grow 1.1s var(--lc-ease) 0.3s both;
+}
+
+.packet {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  margin-top: -4px;
+  border-radius: 50%;
+  background: var(--lc-mint);
+  box-shadow: 0 0 0 3px rgba(98, 246, 181, 0.3);
+  animation: lc-packet 1.4s ease-in-out 0.4s infinite;
+}
+
+.lineTag {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  translate: -50%;
+}
+
+.briefName {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 20px;
+  color: var(--lc-text);
+}
+
+.briefText {
+  margin: 4px 0 0;
+  font-size: 14px;
+  line-height: 21px;
+  color: var(--lc-body);
+}
+
+/* ---------- Keyframes ---------- */
+
+@keyframes lc-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes lc-sheen {
+  0%,
+  15% {
+    transform: translateX(-40%);
+  }
+  70%,
+  100% {
+    transform: translateX(40%);
+  }
+}
+
+@keyframes lc-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+@keyframes lc-rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+@keyframes lc-dot {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes lc-blink {
+  50% {
+    opacity: 0.3;
+  }
+}
+
+@keyframes lc-live {
+  0% {
+    box-shadow: 0 0 0 0 rgba(98, 246, 181, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 0 7px rgba(98, 246, 181, 0);
+  }
+}
+
+@keyframes lc-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+}
+
+@keyframes lc-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes lc-type {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes lc-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.97);
+  }
+}
+
+@keyframes lc-grow {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes lc-packet {
+  0% {
+    left: 0;
+    opacity: 0;
+  }
+  15%,
+  85% {
+    opacity: 1;
+  }
+  100% {
+    left: calc(100% - 8px);
+    opacity: 0;
+  }
+}
+
+@keyframes lc-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(14, 14, 19, 0.25);
+  }
+  100% {
+    box-shadow: 0 0 0 10px rgba(14, 14, 19, 0);
+  }
+}
+
+/* ---------- Breakpoints ---------- */
+
+@media (min-width: 768px) {
+  .section {
+    padding: 88px 30px 72px;
+  }
+  .checkGrid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .check {
+    min-height: 40px;
+  }
+  .heading {
+    font-size: 38px;
+  }
+  .panel {
+    height: 520px;
+  }
+  .panelInner {
+    padding: 32px 28px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .inner {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    align-items: center;
+    gap: 64px;
+  }
+  .panel {
+    height: 544px;
+  }
+  /* Pill pinned at a fixed top (not centred) so it never jumps between steps; the tallest
+     step (pre-qualify) sits centred with this padding. */
+  .panelInner {
+    padding-top: 52px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .section {
+    padding: 96px 30px 80px;
+  }
+  .heading {
+    font-size: 44px;
+  }
+  .stepTitle {
+    font-size: 20px;
+  }
+}
+
+/* globals.css clamps durations; zero the delays too so each step renders complete at once,
+   and stop the idle loops outright. */
+@media (prefers-reduced-motion: reduce) {
+  .panel * {
+    animation-delay: 0s !important;
+  }
+  .panel::after,
+  .packet,
+  .nowDot,
+  .liveDot,
+  .avatarYou[data-on="true"] {
+    animation: none !important;
+  }
+}

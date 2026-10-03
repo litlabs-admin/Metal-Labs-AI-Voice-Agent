@@ -1,0 +1,563 @@
+/* §12b2 - "Pricing". Centred title block; a top row pairing the rule switches with one black
+   receipt at equal height; what's included below as a zero-gap 3x2 hairline grid (the "Built for
+   Mortgage" table). Sized to land around 1.5 viewports on desktop.
+   Same split as the other recent sections: this module owns layout and responsive sizing,
+   Tailwind utilities add colour / font family / hover. Mobile-first: base = phone, 768 = tablet,
+   1024 = two columns, 1440 = desktop (see Compliance.module.css for why 1440 lives here). */
+
+.section {
+  --pr-border: rgba(0, 0, 0, 0.1);
+  --pr-black: var(--color-black, #000);
+  --pr-mint: #62f6b5;
+  --pr-amber: #f5a524;
+  --pr-amber-ink: #ffc46b;
+  --pr-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 20px 72px;
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+}
+
+.titleBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  text-align: center;
+}
+
+.heading {
+  font-size: 26px;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+.subhead {
+  max-width: 560px;
+  margin-inline: auto;
+  font-size: 16px;
+  line-height: 26px;
+}
+
+/* Small uppercase label used above groups. */
+.groupLabel {
+  display: block;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.08em;
+}
+
+/* ---------- Top row: rules | receipt (equal height from 1024) ---------- */
+
+.top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+}
+
+.rulesCol {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.groupHead {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.groupTitle {
+  font-size: 18px;
+  line-height: 1.35;
+  font-weight: 400;
+}
+
+.groupHint {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.ruleList {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Each rule stretches so the four of them fill the row next to the receipt. */
+.ruleItem {
+  display: flex;
+  flex: 1 1 auto;
+}
+
+.rule {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 18px;
+  border: 1px solid var(--pr-border);
+  border-radius: 12px;
+  background: #fff;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background-color 0.3s var(--pr-ease),
+    border-color 0.3s var(--pr-ease);
+}
+
+.rule:hover,
+.ruleActive {
+  border-color: rgba(0, 0, 0, 0.16);
+  background: rgba(255, 250, 234, 0.6); /* cream/60, the site's card hover tint */
+}
+
+.rule:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--pr-black);
+}
+
+.rowText {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.rowTitle {
+  font-size: 16px;
+  line-height: 22px;
+  font-weight: 400;
+}
+
+.rowDetail {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+/* Switch: grey track, black layer fades in when on, knob slides (motion). */
+.track {
+  position: relative;
+  display: flex;
+  flex: none;
+  align-items: center;
+  width: 44px;
+  height: 26px;
+  padding: 3px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.trackOn {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--pr-black);
+  transition: opacity 0.3s var(--pr-ease);
+}
+
+.knob {
+  position: relative;
+  display: block;
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+
+/* ---------- Receipt (one black card) ---------- */
+
+.receiptWrap {
+  display: flex;
+}
+
+.receipt {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  padding: 24px;
+  border-radius: 24px;
+  background: var(--pr-black);
+  color: var(--color-text-on-dark, #fffaea);
+}
+
+.receiptLabel {
+  font-size: 11px;
+  line-height: 14px;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.dashed {
+  margin-block: 18px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.2);
+}
+
+/* Price + terms on the left, CTA on the right; wraps to a full-width CTA on phones. */
+.band {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px 24px;
+  margin-top: 16px;
+}
+
+.priceRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.currency {
+  margin-top: 6px;
+  font-size: 22px;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.digits {
+  display: inline-flex;
+  font-size: 56px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+/* Each digit rolls up out of its own mask. */
+.digitMask {
+  display: inline-block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+}
+
+.digit {
+  display: inline-block;
+}
+
+.period {
+  align-self: flex-end;
+  margin-bottom: 6px;
+  margin-left: 4px;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.terms {
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 20px;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.cta {
+  display: inline-flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 15px;
+  line-height: 20px;
+}
+
+.cta svg {
+  transition: transform 0.3s var(--pr-ease);
+}
+
+.cta:hover svg {
+  transform: translateX(4px);
+}
+
+.cta:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+.meter {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.meterTrack {
+  position: relative;
+  display: block;
+  height: 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.meterFill {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: #fff;
+  transform-origin: left center;
+}
+
+/* Rules in action */
+.previewLabel {
+  margin-bottom: 6px;
+}
+
+.leadList {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.lead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-inline: -12px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  transition: background-color 0.3s var(--pr-ease);
+}
+
+.leadActive {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.leadName {
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.88);
+  transition: color 0.3s var(--pr-ease);
+}
+
+.leadActive .leadName {
+  color: #fff;
+}
+
+.leadContext {
+  font-size: 13px;
+  line-height: 18px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.pill {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  overflow: hidden;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  line-height: 18px;
+  white-space: nowrap;
+  /* Colour follows the switch knob (0.3s) by a beat, so cause reads before effect. */
+  transition:
+    background-color 0.3s var(--pr-ease) 0.08s,
+    color 0.3s var(--pr-ease) 0.08s;
+}
+
+.pillOn {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.pillOff {
+  background: rgba(245, 165, 36, 0.15);
+  color: var(--pr-amber-ink);
+}
+
+/* Live status line (the receipt's one-liner). */
+.status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  line-height: 14px;
+  letter-spacing: 0.1em;
+}
+
+.statusDot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  transition:
+    background-color 0.3s var(--pr-ease),
+    box-shadow 0.3s var(--pr-ease);
+}
+
+.statusOk {
+  color: var(--pr-mint);
+}
+.statusOk .statusDot {
+  background: var(--pr-mint);
+  box-shadow: 0 0 0 4px rgba(98, 246, 181, 0.14);
+}
+
+.statusWarn {
+  color: var(--pr-amber-ink);
+}
+.statusWarn .statusDot {
+  background: var(--pr-amber);
+  box-shadow: 0 0 0 4px rgba(245, 165, 36, 0.16);
+}
+
+/* ---------- What's included: zero-gap hairline grid ---------- */
+
+.included {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+/* The container draws the top/left rules and each cell the bottom/right, so the table closes
+   cleanly at 1, 2 or 3 columns (same technique as WhyMetalLabs / Compliance). */
+.includedGrid {
+  display: grid;
+  width: 100%;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.cell {
+  display: flex;
+  height: 100%;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px;
+}
+
+/* Blue silk tile (the "Built for Mortgage" tile images) carrying a white line icon. */
+.iconWell {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  overflow: clip;
+  background-size: cover;
+  background-position: center;
+}
+
+.iconWell svg {
+  width: 22px;
+  height: 22px;
+}
+
+.cellTitle {
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 400;
+}
+
+.cellDetail {
+  font-size: 15px;
+  line-height: 22px;
+}
+
+/* ---------- Breakpoints ---------- */
+
+@media (min-width: 640px) {
+  .band {
+    flex-wrap: nowrap;
+  }
+  .cta {
+    width: auto;
+    flex: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .section {
+    padding: 60px 30px 90px;
+  }
+  .inner {
+    gap: 56px;
+  }
+  .heading {
+    font-size: 38px;
+  }
+  .subhead {
+    font-size: 17px;
+    line-height: 27px;
+  }
+  .includedGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .cell {
+    padding: 24px;
+  }
+  .receipt {
+    padding: 28px;
+  }
+  .digits {
+    font-size: 64px;
+  }
+  .groupTitle {
+    font-size: 20px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .top {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: stretch;
+  }
+  .includedGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1440px) {
+  .section {
+    padding: 80px 30px 100px;
+  }
+  .inner {
+    gap: 60px;
+  }
+  .heading {
+    font-size: 44px;
+  }
+  .top {
+    gap: 32px;
+  }
+  .receipt {
+    padding: 32px;
+  }
+  .digits {
+    font-size: 72px;
+  }
+  .cell {
+    gap: 20px;
+    padding: 28px;
+  }
+  .iconWell {
+    width: 56px;
+    height: 56px;
+  }
+  .iconWell svg {
+    width: 26px;
+    height: 26px;
+  }
+}

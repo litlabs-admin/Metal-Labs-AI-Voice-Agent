@@ -1,13 +1,18 @@
 "use client";
 
-import { useReducedMotion } from "framer-motion";
 import { assets } from "@/lib/assets";
+import { useReducedMotionSafe } from "@/lib/useReducedMotionSafe";
 
 // Hero background: the Metal Labs brand video with a bottom-to-top gradient +
 // dark tint overlay (matches the legibility treatment of the previous WebGL
 // hero) so the headline stays readable over any frame of the footage.
+//
+// Reduced motion swaps the video for its poster image. That choice changes which
+// ELEMENT renders, so it must use the hydration-safe hook: framer-motion's
+// useReducedMotion reads the media query on the first client render and would
+// render <img> where the server sent <video>, failing hydration.
 export function HeroGradientCanvas() {
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotionSafe();
 
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden">

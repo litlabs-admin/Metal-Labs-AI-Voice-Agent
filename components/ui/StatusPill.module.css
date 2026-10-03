@@ -1,0 +1,57 @@
+/* The agent: an ink pill with the orb and a live, shimmering label. Shared by the
+   speed-to-lead story and the hero's "Hear it live" dialog. */
+.pill {
+  display: inline-flex;
+  height: 54px;
+  flex: none;
+  align-items: center;
+  gap: 12px;
+  padding: 0 22px 0 8px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 999px;
+  background: var(--color-ink);
+  box-shadow: 0 10px 30px rgba(14, 14, 19, 0.18);
+}
+
+.pillOrb {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+}
+
+.pillLabel {
+  font-size: 14.5px;
+  font-weight: 500;
+  line-height: 20px;
+  white-space: nowrap;
+  color: transparent;
+  background: linear-gradient(90deg, #8b8b94 0%, #8b8b94 35%, #f7f7f8 50%, #8b8b94 65%, #8b8b94 100%);
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: pill-shimmer 2.4s linear infinite;
+}
+
+.pillLabel[data-done="true"] {
+  color: #f7f7f8;
+  background: none;
+  animation: none;
+}
+
+@keyframes pill-shimmer {
+  from {
+    background-position: 125% 0;
+  }
+  to {
+    background-position: -125% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pillLabel {
+    color: #f7f7f8;
+    background: none;
+    animation: none !important;
+  }
+}

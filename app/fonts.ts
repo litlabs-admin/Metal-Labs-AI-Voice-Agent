@@ -1,4 +1,4 @@
-import { Merriweather, Cabin, Inter } from "next/font/google";
+import { Cabin, Inter } from "next/font/google";
 import localFont from "next/font/local";
 
 // Brand type system:
@@ -7,11 +7,15 @@ import localFont from "next/font/local";
 //   Buttons       → system sans-serif 400 (see --font-button in globals.css)
 //   Illustrations → Inter            (--font-illustration)
 //   Footer brand  → Switzer          (--font-switzer)
-export const merriweather = Merriweather({
+
+// Merriweather is self-hosted: next/font/google failed on Vercel builds for this family only
+// (Turbopack "next/font/google queries have exactly one entry"). The file is Google Fonts'
+// v33 variable latin subset, which covers every weight we use (300-700).
+export const merriweather = localFont({
   variable: "--font-merriweather",
-  subsets: ["latin"],
-  weight: ["300", "400", "700"],
   display: "swap",
+  src: [{ path: "./fonts/Merriweather-Variable-Latin.woff2", weight: "300 700", style: "normal" }],
+  adjustFontFallback: "Times New Roman",
 });
 
 export const cabin = Cabin({
